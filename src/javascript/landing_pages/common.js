@@ -71,7 +71,9 @@ function getParamValue(url, key) {
 }
 
 function allLanguages() {
-    return [ 'en', 'de', 'es', 'fr', 'id', 'it', 'ko', 'ja', 'pl', 'pt', 'ru', 'th', 'vi', 'zh_cn', 'zh_tw' ];
+    // TODO: add 'ko' when korean is done
+    // return [ 'en', 'de', 'es', 'fr', 'id', 'it', 'ko', 'ja', 'pl', 'pt', 'ru', 'th', 'vi', 'zh_cn', 'zh_tw' ];
+    return [ 'en', 'de', 'es', 'fr', 'id', 'it', 'ja', 'pl', 'pt', 'ru', 'th', 'vi', 'zh_cn', 'zh_tw' ];
 }
 
 function getLanguage() {
