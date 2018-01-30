@@ -22,13 +22,21 @@ module.exports = {
         'one-var'                          : ['error', { initialized: 'never', uninitialized: 'always' }],
         // react rules
         'import/no-extraneous-dependencies': [0, { extensions: ['.jsx'] }],
+        'jsx-a11y/alt-text'                : 0,
         'jsx-quotes'                       : ['error', 'prefer-single'],
+        'react/jsx-indent'                 : ['error', 4],
+        'react/jsx-indent-props'           : ['error', 4],
         'react/prop-types'                 : 0,
+        // TODO: to be removed
+        'prefer-destructuring'             : 0,
+        'no-restricted-globals'            : 0,
+        'no-multi-assign'                  : 0,
     },
     extends: [
-        'airbnb-base',
+        'airbnb',
         'binary',
         'plugin:react/recommended',
+        'plugin:jsx-a11y/recommended',
     ],
     parserOptions: {
         ecmaVersion : 6,
