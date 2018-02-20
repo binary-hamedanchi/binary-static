@@ -1,11 +1,23 @@
 /* stylelint-disable color-no-hex */
 /* stylelint-disable number-max-precision */
 .tab-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    &.left {
+        text-align: left;
+    }
+    &.center {
+        text-align: center;
+    }
+    &.right {
+        text-align: right;
+    }
     .tab-wrapper {
         position: relative;
         display: inline-block;
         margin-bottom: 3px;
-        border-bottom: 2px solid #e9e9ed;
+        border-bottom: 1px solid #e9e9ed;
         width: 100%;
     }
     .tab {
@@ -29,14 +41,15 @@
     }
     .tab_underline {
         position: absolute;
-        top: 99%;
+        bottom: -1px;
         left: 0;
         right: 0;
-        border-bottom: 3px solid #2a3052;
+        border-bottom: 2px solid #2a3052;
     }
     .tab-content {
         font-size: 1.125rem;
         line-height: 1.4em;
+        text-align: left;
     }
 }
 /* stylelint-enable number-max-precision */

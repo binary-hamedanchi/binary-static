@@ -6,8 +6,9 @@ class Tabs extends React.PureComponent {
         this.state = { active: '1' };
     }
     render() {
+        const className = 'tab-container';
         return (
-            <div className='tab-container'>
+            <div className={`${className} ${this.props.alignment}`}>
                 <TabsWrapper
                   active={this.state.active}
                   onChange={active => this.setState({active})}
@@ -77,7 +78,6 @@ class TabsWrapper extends React.PureComponent {
                 return (
                   <React.Fragment key={i}>
                       <div
-                        title='tab'
                         className={child.key === this.props.active ? `${className} tab--active` : className}
                         onClick={() => {
                             this.props.onChange(child.key);
@@ -117,10 +117,12 @@ const content = {
     1: { header: 'Tab 1', content: 'Content 1' },
     2: { header: 'Tab 2', content: 'Content 2' },
     3: { header: 'Tab 3', content: 'Content 3' },
+    4: { header: 'Tab 4', content: 'Content 4' },
 };
 
 Tabs.defaultProps = {
-    list: content,
+    alignment: 'left',
+    list     : content,
 };
 
 export default Tabs;
