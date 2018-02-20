@@ -1,0 +1,43 @@
+/* stylelint-disable color-no-hex */
+/* stylelint-disable number-max-precision */
+.tab-container {
+    .tab-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 3px;
+        border-bottom: 2px solid #e9e9ed;
+        width: 100%;
+    }
+    .tab {
+        display: inline-block;
+        padding: 16px;
+        background: #fff;
+        color: #333333;
+        cursor: pointer;
+        font-weight: 300;
+
+        i {
+            padding-right: 8px;
+        }
+        span {
+            font-size: 1rem;
+        }
+        &:hover, &--active {
+            color: #2a3052;
+            font-weight: 400;
+        }
+    }
+    .tab_underline {
+        position: absolute;
+        top: 99%;
+        left: 0;
+        right: 0;
+        border-bottom: 3px solid #2a3052;
+    }
+    .tab-content {
+        font-size: 1.125rem;
+        line-height: 1.4em;
+    }
+}
+/* stylelint-enable number-max-precision */
+/* stylelint-enable color-no-hex */
