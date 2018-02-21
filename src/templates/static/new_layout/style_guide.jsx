@@ -103,11 +103,11 @@ const StyleGuide = () => (
                 <div className='gr-row gr-padding-20'>
                     <div className='gr-12'>
                         <UL items={[
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
                         ]} />
                     </div>
                 </div>
@@ -121,11 +121,11 @@ const StyleGuide = () => (
                <div className='gr-row gr-padding-20'>
                    <div className='gr-12'>
                        <OL items={[
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
                        ]} />
                    </div>
                </div>
