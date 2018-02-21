@@ -1,0 +1,49 @@
+/* stylelint-disable color-no-hex */
+/* stylelint-disable number-max-precision */
+
+ul.list {
+    li.list-item {
+        list-style: none;
+
+        span {
+            color: #333333;
+            font-size: 1rem;
+            font-weight: 400;
+
+            &:before {
+                content: '\25CF';
+                font-size: 1.2rem;
+                line-height: 1.4rem;
+                padding: 0 8px;
+                color: #e98024;
+            }
+        }
+    }
+}
+
+ol.list {
+    counter-reset: item;
+    margin: 0; /* temporarily override binary-style for ol elements */
+
+    li.list-item {
+        counter-increment: item;
+        list-style: none;
+
+        span {
+            color: #333333;
+            font-size: 1rem;
+            font-weight: 400;
+
+            &:before {
+                display: inline-block;
+                content: counter(item)'.';
+                line-height: 1.4rem;
+                padding-right: 8px;
+                text-align: center;
+            }
+        }
+    }
+}
+
+/* stylelint-enable number-max-precision */
+/* stylelint-enable color-no-hex */

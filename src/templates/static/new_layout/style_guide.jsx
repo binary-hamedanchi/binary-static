@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../../../javascript/app_2/pages/trading/components/form/button.jsx';
 import InputField from '../../../javascript/app_2/pages/trading/components/form/input_field.jsx';
+import { UL, OL } from '../../../javascript/app_2/pages/trading/components/elements/list.jsx';
 
 const StyleGuide = () => (
     <div className='container'>
@@ -93,6 +94,42 @@ const StyleGuide = () => (
                     </div>
                 </div>
             </div>
+            <div className='gr-6 gr-12-m'>
+                <div className='gr-row'>
+                    <div className='gr-12'>
+                        <h2 className='center-text'>Unordered List</h2>
+                    </div>
+                </div>
+                <div className='gr-row gr-padding-20'>
+                    <div className='gr-12'>
+                        <UL items={[
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                        ]} />
+                    </div>
+                </div>
+           </div>
+           <div className='gr-6 gr-12-m'>
+               <div className='gr-row'>
+                   <div className='gr-12'>
+                       <h2 className='center-text'>Ordered List</h2>
+                   </div>
+               </div>
+               <div className='gr-row gr-padding-20'>
+                   <div className='gr-12'>
+                       <OL items={[
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                       ]} />
+                   </div>
+               </div>
+          </div>
         </div>
     </div>
     );
