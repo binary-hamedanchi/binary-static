@@ -1,9 +1,11 @@
 import React from 'react';
+import Url from '../../../../../_common/url';
+import Button from '../form/button.jsx';
 
 class PopUp extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.state = { isOpen: false };
+        this.state = { isOpen: this.props.autostart };
     }
     toggleModal = () => {
         this.setState({
@@ -14,15 +16,34 @@ class PopUp extends React.PureComponent {
     render() {
         return (
             <React.Fragment>
-                {(!!this.props.trigger_type === 'button') &&
-                    <button onClick={this.toggleModal}>{this.props.text}</button>
-                }
-                {this.props.trigger_type &&
-                    <a href='javascript:;' onClick={this.toggleModal}>{this.props.text}</a>
+              {this.props.autostart ? null
+                :
+                <React.Fragment>
+                    {!!this.props.is_btn &&
+                        <Button
+                            text={this.props.text}
+                            onClick={this.toggleModal}
+                            has_effect
+                        />
+                    }
+                    {!!this.props.is_link &&
+                        <a
+                            className={this.props.className}
+                            href='javascript:;'
+                            onClick={this.toggleModal}>
+                                {this.props.text}
+                        </a>
+                    }
+                </React.Fragment>
                 }
                 <Modal
-                  show={this.state.isOpen}
-                  onClose={this.toggleModal}>
+                    show={this.state.isOpen}
+                    onClose={this.toggleModal}
+                    action_one={this.props.action_one}
+                    action_one_text={this.props.action_one_text}
+                    action_two={this.props.action_two}
+                    action_two_text={this.props.action_two_text}
+                >
                   {this.props.children}
                 </Modal>
             </React.Fragment>
@@ -32,13 +53,20 @@ class PopUp extends React.PureComponent {
 
 class Modal extends React.PureComponent {
     render() {
-        // Render nothing if the 'show' prop is false
-        if (!this.props.show) {
-            return null;
-        }
+        const visibility = {
+            visibility: `${this.props.show ? 'visible' : 'hidden'}`,
+            opacity   : `${this.props.show ? '1' : '0'}`,
+        };
         return (
-          <div className={`popup-backdrop ${this.props.show ? 'show' : '' }`}>
-              <div className={`popup ${this.props.show ? 'show' : '' }`}>
+          <div className={`popup-backdrop ${this.props.show ? 'show' : '' }`}
+               style={visibility}
+          >
+              <div className={`popup ${this.props.show ? 'show' : '' }`}
+                   style={visibility}
+              >
+                  <div className='popup-close' onClick={this.props.onClose}>
+                      <img src={Url.urlForStatic('images/trading_app/close.svg')} alt='Close' />
+                  </div>
                   {!!this.props.title &&
                       <div className='popup-title'>{this.props.title}</div>
                   }
@@ -46,19 +74,18 @@ class Modal extends React.PureComponent {
                       {this.props.children}
                   </div>
                   <div className='popup-footer'>
-                      <button onClick={this.props.onClose}>
-                          <span>Close</span>
-                      </button>
-                      {!!this.props.action_one &&
-                          <button onClick={this.props.action_one}>
-                              {this.props.action_one_text}
-                          </button>
-                      }
-                      {!!this.props.action_one &&
-                          <button onClick={this.props.action_two}>
-                              {this.props.action_two_text}
-                          </button>
-                      }
+                      <Button
+                          className='flat'
+                          text={this.props.action_one_text}
+                          onClick={this.props.action_one}
+                          has_effect
+                      />
+                      <Button
+                          className='flat'
+                          text={this.props.action_two_text}
+                          onClick={this.props.action_two}
+                          has_effect
+                      />
                   </div>
               </div>
           </div>
@@ -71,8 +98,11 @@ Modal.defaultProps = {
 };
 
 PopUp.defaultProps = {
-    trigger_type: 'link',
-    text        : 'Modal Button',
+    trigger_type   : 'link',
+    text           : 'Modal Button',
+    autostart      : false,
+    action_one_text: 'Action 1',
+    action_two_text: 'Action 2',
 };
 
 export default PopUp;

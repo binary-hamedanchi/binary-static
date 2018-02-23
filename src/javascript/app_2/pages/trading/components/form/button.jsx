@@ -2,15 +2,15 @@ import React from 'react';
 
 const Button = ({
     id,
-    className = '',
+    className,
     text,
     has_effect,
     is_disabled,
-    handleClick,
+    onClick,
 }) => {
-    const classes = `btn${has_effect ? ' effect' : ''} ${className}`;
+    const classes = `btn${has_effect ? ' effect' : ''} ${className || 'primary green'}`;
     return (
-        <button id={id} className={classes} onClick={handleClick || undefined} disabled={is_disabled}>
+        <button id={id} className={classes} onClick={onClick || undefined} disabled={is_disabled}>
             <span>{text}</span>
         </button>
     );
