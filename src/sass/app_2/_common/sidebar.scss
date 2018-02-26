@@ -4,14 +4,8 @@
     margin-top: 72px;
     display: grid;
     grid-column-gap: 50px;
-    grid-template-columns: 30% 60%;
+    grid-template-columns: 25% 75%;
 }
-
-//.sidebar-collapsible-content {
-//    display: flex;
-//    flex-basis: 70%;
-//    flex-grow: 1;
-//}
 
 .sidebar-submenu {
     position: relative;
@@ -19,6 +13,7 @@
 
     ul {
         font-size: 14px;
+        margin: 0;
 
         li {
             list-style-image: none;
@@ -34,13 +29,14 @@
                 display: block;
                 color: #333333;
                 padding: 0;
-                font-weight: bold;
+                font-weight: normal;
                 font-size: 14px;
 
                 &.selected {
                     color: #4c5794;
                     background: #f2f3f8;
                     text-decoration: none;
+                    font-weight: bold;
                 }
             }
             &:hover {
@@ -61,6 +57,7 @@
                     padding: 0;
 
                     &.selected {
+                        font-weight: bold;
                         color: #4c5794;
                         background: #f2f3f8;
                         text-decoration: none;
@@ -98,7 +95,7 @@
                         background: #ffffff;
                         border: none;
                         padding: 0;
-                        font-weight: bold;
+                        font-weight: normal;
                     }
                     a.selected {
                         color: #4c5794;
@@ -106,6 +103,7 @@
                         text-decoration: none;
                         border: none;
                         padding: 0;
+                        font-weight: bold;
 
                         &:hover {
                             color: #4c5794;
@@ -119,7 +117,7 @@
                 li.active {
                     background: #f2f3f8;
                     border: none;
-                    border-right: 2px solid #4c5794;
+                    border-right: 4px solid #4c5794;
 
                     a {
                         background: #ffffff;
