@@ -102,13 +102,13 @@ const StyleGuide = () => (
                 </div>
                 <div className='gr-row gr-padding-20'>
                     <div className='gr-12'>
-                        <UL>
-                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                        </UL>
+                    <UL>
+                        <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                        <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                        <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                        <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                        <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                    </UL>
                     </div>
                 </div>
            </div>
@@ -120,13 +120,13 @@ const StyleGuide = () => (
                </div>
                <div className='gr-row gr-padding-20'>
                    <div className='gr-12'>
-                       <OL>
-                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
-                       </OL>
+                    <OL>
+                       <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                       <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                       <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                       <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                       <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                    </OL>
                    </div>
                </div>
           </div>
