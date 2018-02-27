@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from '../store/connect';
-import Tabs from '../components/elements/tabs.jsx';
 
 const Contracts = ({ list }) => (
     Object.keys(list).map((category, idx) => (
@@ -18,14 +17,11 @@ const Contract = ({
     contract_types_list,
     onChange,
 }) => (
-    <React.Fragment>
     <fieldset>
         <select name='contract_type' value={contract_type} onChange={onChange}>
             <Contracts list={contract_types_list} />
         </select>
     </fieldset>
-    <Tabs />
-    </React.Fragment>
 );
 
 export default connect(
