@@ -3,8 +3,10 @@
 .sidebar-wrapper {
     margin-top: 72px;
     display: grid;
-    grid-column-gap: 50px;
-    grid-template-columns: 25% 75%;
+}
+
+.sidebar-collapsible-content {
+    margin-top: 25px;
 }
 
 .sidebar-submenu {
@@ -135,5 +137,17 @@
                 }
             }
         }
+    }
+}
+
+@media (min-width: 767px) {
+    .sidebar-wrapper {
+        margin-top: 72px;
+        display: grid;
+        grid-column-gap: 50px;
+        grid-template-columns: 25% 75%;
+    }
+    .sidebar-collapsible-content {
+        margin-top: 0;
     }
 }
