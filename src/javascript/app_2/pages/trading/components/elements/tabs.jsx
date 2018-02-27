@@ -3,15 +3,18 @@ import React from 'react';
 class Tabs extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.state = { active: '1' };
+        this.state = { active_tab_index: '1' };
     }
+    setActiveTab(active) {
+        this.setState({active_tab_index: active});
+    };
     render() {
         const className = 'tab-container';
         return (
             <div className={`${className} ${this.props.alignment}`}>
                 <TabsWrapper
-                  active={this.state.active}
-                  onChange={active => this.setState({active})}
+                  active={this.state.active_tab_index}
+                  onChange={active => this.setActiveTab(active)}
                 >
                 {Object.keys(this.props.list).map(key => (
                     <React.Fragment key={key}>
@@ -22,7 +25,7 @@ class Tabs extends React.PureComponent {
                     </React.Fragment>
                 ))}
                 </TabsWrapper>
-                <p className='tab-content'>{this.props.list[this.state.active].content}</p>
+                <p className='tab-content'>{this.props.list[this.state.active_tab_index].content}</p>
             </div>
         );
     }
@@ -42,6 +45,7 @@ class TabsWrapper extends React.PureComponent {
     }
 
     componentDidUpdate(prevProps) {
+        // component re-renders twice, pending better workaround
         if (prevProps.children !== this.props.children && prevProps.active !== this.props.active) {
             this.getSizes();
         }
@@ -67,7 +71,6 @@ class TabsWrapper extends React.PureComponent {
     }
 
     render() {
-        // console.log(JSON.stringify(this.state, null, 2));
         return (
           <div
             className='tab-wrapper'
@@ -76,21 +79,20 @@ class TabsWrapper extends React.PureComponent {
             {React.Children.map(this.props.children, (child, i) => {
                 const className = 'tab';
                 return (
-                  <React.Fragment key={i}>
-                      <div
-                        className={child.key === this.props.active ? `${className} tab--active` : className}
-                        onClick={() => {
-                            this.props.onChange(child.key);
-                        }}
-                        ref={el => this.els[child.key] = el}
-                      >
-                        {child}
-                      </div>
-                  </React.Fragment>
+                    <div
+                      key={i}
+                      className={child.key === this.props.active ? `${className} tab--active` : className}
+                      onClick={() => {
+                          this.props.onChange(child.key);
+                      }}
+                      ref={el => this.els[child.key] = el}
+                    >
+                      {child}
+                    </div>
                 );
             })}
             <div
-              className='tab_underline'
+              className='tab-underline'
               style={this.getUnderlineStyle()}
             />
           </div>
