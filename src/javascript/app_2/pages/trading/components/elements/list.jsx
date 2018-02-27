@@ -1,22 +1,14 @@
 import React from 'react';
 
-const UL = ({ items, className }) =>  (
+const UL = ({ className, children }) =>  (
     <ul className={`list ${className || ''}`}>
-        { items.map((item, idx) => (
-            <li key={idx} className='list-item'>
-                <span>{item.li}</span>
-            </li>
-        ))}
+        {children}
     </ul>
 );
 
-const OL = ({ items, className }) =>  (
+const OL = ({ className, children }) =>  (
     <ol className={`list ${className || ''}`}>
-        { items.map((item, idx) => (
-            <li key={idx} className='list-item'>
-                <span>{item.li}</span>
-            </li>
-        ))}
+        {children}
     </ol>
 );
 
