@@ -20,7 +20,14 @@ const OL = ({ items, className }) =>  (
     </ol>
 );
 
+const LI = ({children}) => (
+   <li className='list-item'>
+        <span>{children}</span>
+    </li>
+);
+
 module.exports = {
     UL,
     OL,
+    LI,
 };

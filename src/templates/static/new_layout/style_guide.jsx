@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../../../javascript/app_2/pages/trading/components/form/button.jsx';
 import InputField from '../../../javascript/app_2/pages/trading/components/form/input_field.jsx';
-import { UL, OL } from '../../../javascript/app_2/pages/trading/components/elements/list.jsx';
+import { UL, OL, LI } from '../../../javascript/app_2/pages/trading/components/elements/list.jsx';
 
 const StyleGuide = () => (
     <div className='container'>
@@ -102,13 +102,13 @@ const StyleGuide = () => (
                 </div>
                 <div className='gr-row gr-padding-20'>
                     <div className='gr-12'>
-                        <UL items={[
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                            { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                        ]} />
+                        <UL>
+                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                            <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                        </UL>
                     </div>
                 </div>
            </div>
@@ -120,13 +120,13 @@ const StyleGuide = () => (
                </div>
                <div className='gr-row gr-padding-20'>
                    <div className='gr-12'>
-                       <OL items={[
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                           { li: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.' },
-                       ]} />
+                       <OL>
+                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                           <LI>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar id mi ac congue.</LI>
+                       </OL>
                    </div>
                </div>
           </div>
