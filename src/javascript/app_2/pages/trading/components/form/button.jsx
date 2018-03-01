@@ -10,7 +10,13 @@ const Button = ({
 }) => {
     const classes = `btn${has_effect ? ' effect' : ''} ${className || 'primary green'}`;
     return (
-        <button id={id} className={classes} onClick={onClick || undefined} disabled={is_disabled}>
+        <button
+            id={id}
+            className={classes}
+            onClick={onClick || undefined}
+            disabled={is_disabled}
+            tabIndex='1'
+        >
             <span>{text}</span>
         </button>
     );
