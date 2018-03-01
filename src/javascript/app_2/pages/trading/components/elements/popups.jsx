@@ -19,14 +19,13 @@ class PopUp extends React.PureComponent {
               {this.props.autostart ? null
                 :
                 <React.Fragment>
-                    {!!this.props.is_btn &&
+                    {this.props.is_btn ?
                         <Button
                             text={this.props.text}
                             onClick={this.toggleModal}
                             has_effect
                         />
-                    }
-                    {!!this.props.is_link &&
+                    :
                         <a
                             className={this.props.className}
                             href='javascript:;'
@@ -98,7 +97,7 @@ Modal.defaultProps = {
 };
 
 PopUp.defaultProps = {
-    trigger_type   : 'link',
+    is_btn         : false,
     text           : 'Modal Button',
     autostart      : false,
     action_one_text: 'Action 1',
