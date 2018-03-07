@@ -6,6 +6,7 @@ module.exports = {
     },
     dist: {
         src: [
+            global.dist + '/css/fonts.css',
             global.dist + '/css/common.css',
             global.dist + '/css/app.css',
             global.dist + '/css/static.css',

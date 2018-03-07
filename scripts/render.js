@@ -166,6 +166,7 @@ const createContextBuilder = async () => {
                 `${config.root_url}js/binary.min.js?${static_hash}`,
         ],
         css_files: [
+            `${config.root_url}css/fonts.min.css`,
             `${config.root_url}css/common.min.css?${static_hash}`,
             ...config.sections.map(section => `${config.root_url}css/${section}.min.css?${static_hash}`),
         ],
