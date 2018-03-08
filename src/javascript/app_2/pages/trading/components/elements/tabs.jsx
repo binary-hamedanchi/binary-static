@@ -42,6 +42,7 @@ class TabsWrapper extends React.PureComponent {
 
     componentDidMount() {
         this.getSizes();
+        window.addEventListener('resize', this.getSizes.bind(this));
     }
 
     componentDidUpdate(prevProps) {
@@ -49,6 +50,10 @@ class TabsWrapper extends React.PureComponent {
         if (prevProps.children !== this.props.children && prevProps.active !== this.props.active) {
             this.getSizes();
         }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.getSizes.bind(this));
     }
 
     getSizes() {
