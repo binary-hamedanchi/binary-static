@@ -10,6 +10,7 @@ import Test from './components/test.jsx';
 import Purchase from './components/purchase.jsx';
 import { connect } from './store/connect';
 import Sidebar from './components/elements/sidebar';
+import PortfolioDrawer from './components/elements/portfolio_drawer.jsx';
 
 class TradeApp extends React.Component {
     isVisible(component_name) {
@@ -24,7 +25,7 @@ class TradeApp extends React.Component {
                     <ContractType />
                     <Test />
                 </div>
-                <div className='sidebar-container'>
+                <div className='sidebar-container desktop-only'>
 
                     {this.isVisible('start_date') && <StartDate />}
                     <Duration />
@@ -41,7 +42,9 @@ class TradeApp extends React.Component {
 }
 
 export default connect(
-    ({trade}) => ({
-        form_components: trade.form_components,
+    ({ trade, ui }) => ({
+        form_components      : trade.form_components,
+        portfolios           : trade.portfolios,
+        togglePortfolioDrawer: ui.togglePortfolioDrawer,
     })
 )(TradeApp);
