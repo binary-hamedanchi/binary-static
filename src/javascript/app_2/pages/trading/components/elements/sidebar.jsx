@@ -7,7 +7,7 @@ class Sidebar extends React.PureComponent {
         const defaultOpenTargetId = props.items ? props.items[0].id : '';
 
         this.state = {
-            selectedId: defaultSelectedId,
+            selectedId  : defaultSelectedId,
             openTargetId: defaultOpenTargetId,
         };
     }
@@ -22,7 +22,7 @@ class Sidebar extends React.PureComponent {
 
     openSubmenu = e => {
         if (this.state.openTargetId !== e.target.id) {
-            const firstListItem = this.props.items.filter(it => it.id == e.target.id);
+            const firstListItem = this.props.items.filter(it => it.id === e.target.id);
             this.setState({ openTargetId: e.target.id, selectedId: firstListItem[0].submenu[0].id });
         }
     }
@@ -30,7 +30,7 @@ class Sidebar extends React.PureComponent {
     render() {
         const { selectedId, openTargetId } = this.state;
         return (
-          <div className="sidebar-wrapper" id={this.props.id}>
+          <div className='sidebar-wrapper' id={this.props.id}>
               <SidebarSubmenu
                 items={this.props.items}
                 onClick={this.onClick}
@@ -39,20 +39,16 @@ class Sidebar extends React.PureComponent {
                 openTargetId={openTargetId} />
               <SidebarContent content={this.props.content} selectedId={selectedId} />
           </div>
-        )
+        );
     }
 };
 
 class SidebarContent extends React.PureComponent {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
           <div className='sidebar-collapsible-content'>
               {this.props.content && this.props.content.map((item, idx) => (
-                <div key={idx} id={item.id} className={this.props.selectedId == item.id ? 'visible' : 'invisible'}>
+                <div key={idx} id={item.id} className={this.props.selectedId === item.id ? 'visible' : 'invisible'}>
                     {item.cont}
                 </div>
               ))}
@@ -62,37 +58,33 @@ class SidebarContent extends React.PureComponent {
 }
 
 class SidebarSubmenu extends React.PureComponent {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const getHref = item_id => `#${item_id}`;
         const { openTargetId } = this.props;
         return (
-            <div className="sidebar-submenu">
+            <div className='sidebar-submenu'>
                 <ul>
                     {this.props.items && this.props.items.map((item, idx) => (
                       <li
                         key={idx}
-                        className={(item.submenu ? 'has-submenu' : '') + (item.id == this.props.selectedId ? 'active' : '')}>
+                        className={(item.submenu ? 'has-submenu' : '') + (item.id === this.props.selectedId ? 'active' : '')}>
                           { item.submenu &&
                           <React.Fragment>
                               <a
                                 id={item.id}
-                                className={openTargetId == item.id ? 'selected' : ''}
+                                className={openTargetId === item.id ? 'selected' : ''}
                                 href={getHref(item.id)}
                                 onClick={this.props.openSubmenu}>
                                   {item.text}
                               </a>
-                              <ul className={openTargetId == item.id ? 'collapsed' : 'compressed'}>
+                              <ul className={openTargetId === item.id ? 'collapsed' : 'compressed'}>
                                   { item.submenu.map((submenu, idx_submenu) => (
                                     <li key={idx_submenu}
-                                        className={submenu.id == this.props.selectedId ? 'active' : ''}>
+                                        className={submenu.id === this.props.selectedId ? 'active' : ''}>
                                         <a
                                           id={submenu.id}
                                           onClick={this.props.onClick}
-                                          className={'submenu-item ' + (submenu.id == this.props.selectedId ? 'selected' : '')}
+                                          className={`submenu-item ${submenu.id === this.props.selectedId ? 'selected' : ''}`}
                                           href={getHref(submenu.id)}>
                                             {submenu.text}
                                         </a>
@@ -102,7 +94,7 @@ class SidebarSubmenu extends React.PureComponent {
                           </React.Fragment>}
                           { !item.submenu && item.text &&
                             <a
-                              className={item.id == this.props.selectedId ? 'selected' : ''}
+                              className={item.id === this.props.selectedId ? 'selected' : ''}
                               id={item.id}
                               onClick={this.props.onClick}
                               href={getHref(item.id)}>{item.text}
@@ -117,36 +109,36 @@ class SidebarSubmenu extends React.PureComponent {
 }
 
 // Dummy values
-const dummyitems = [
-    {
-        id     : 'legal',
-        text   : 'Terms and Conditions',
-        submenu: [
-            { id: 'copyright', text: 'Copyright Section' },
-            { id: 'privacy',     text: 'Privacy Section' },
-        ],
-    },
-    { id: 'datafeed',  text: 'Data Feed Section' },
-];
+// const dummyitems = [
+//     {
+//         id     : 'legal',
+//         text   : 'Terms and Conditions',
+//         submenu: [
+//             { id: 'copyright', text: 'Copyright Section' },
+//             { id: 'privacy',     text: 'Privacy Section' },
+//         ],
+//     },
+//     { id: 'datafeed',  text: 'Data Feed Section' },
+// ];
 
-/*const contents = [
-  {
-    id: 'copyright',
-    cont: <div>copyright</div>
-  },
-    {
-        id: 'privacy',
-        cont: <div>privacy</div>
-    },
-    {
-        id: 'datafeed',
-        cont: <div>datafeed</div>,
-    }
-];
-
-Sidebar.defaultProps = {
-    items: dummyitems,
-    content: contents,
-}*/
+// const contents = [
+//     {
+//         id  : 'copyright',
+//         cont: <div>copyright</div>
+//     },
+//     {
+//         id  : 'privacy',
+//         cont: <div>privacy</div>
+//     },
+//     {
+//         id  : 'datafeed',
+//         cont: <div>datafeed</div>,
+//     }
+// ];
+//
+// Sidebar.defaultProps = {
+//     items  : dummyitems,
+//     content: contents,
+// }
 
 export default Sidebar;

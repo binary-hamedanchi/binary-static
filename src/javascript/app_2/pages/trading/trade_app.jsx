@@ -9,8 +9,7 @@ import Symbol from './components/symbol.jsx';
 import Test from './components/test.jsx';
 import Purchase from './components/purchase.jsx';
 import { connect } from './store/connect';
-import Sidebar from './components/elements/sidebar';
-import PortfolioDrawer from './components/elements/portfolio_drawer.jsx';
+import Sidebar from './components/elements/sidebar.jsx';
 
 class TradeApp extends React.Component {
     isVisible(component_name) {
