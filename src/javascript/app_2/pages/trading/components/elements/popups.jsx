@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Url from '../../../../../_common/url';
 import Button from '../form/button.jsx';
 
@@ -16,7 +17,7 @@ class PopUp extends React.PureComponent {
     render() {
         return (
             <React.Fragment>
-              {this.props.autostart ? null
+                {this.props.autostart ? null
                 :
                 <React.Fragment>
                     {this.props.is_btn ?
@@ -29,8 +30,9 @@ class PopUp extends React.PureComponent {
                         <a
                             className={this.props.className}
                             href='javascript:;'
-                            onClick={this.toggleModal}>
-                                {this.props.text}
+                            onClick={this.toggleModal}
+                        >
+                            {this.props.text}
                         </a>
                     }
                 </React.Fragment>
@@ -43,7 +45,7 @@ class PopUp extends React.PureComponent {
                     action_two={this.props.action_two}
                     action_two_text={this.props.action_two_text}
                 >
-                  {this.props.children}
+                    {this.props.children}
                 </Modal>
             </React.Fragment>
         );
@@ -53,45 +55,53 @@ class PopUp extends React.PureComponent {
 class Modal extends React.PureComponent {
     render() {
         const visibility = {
-            visibility: `${this.props.show ? 'visible' : 'hidden'}`,
-            opacity   : `${this.props.show ? '1' : '0'}`,
+            visibility: this.props.show ? 'visible' : 'hidden',
         };
+        const popup_backdrop_class = classNames('popup-backdrop', {
+            show: this.props.show,
+        });
+        const popup_class = classNames('popup', {
+            show: this.props.show,
+        },  this.props.className );
         return (
-          <div className={`popup-backdrop ${this.props.show ? 'show' : '' }`}
-               style={visibility}
-          >
-              <div className={`popup ${this.props.show ? 'show' : '' }`}
-                   style={visibility}
-              >
-                  <div className='popup-close' onClick={this.props.onClose}>
-                      <img src={Url.urlForStatic('images/trading_app/close.svg')} alt='Close' />
-                  </div>
-                  {!!this.props.title &&
-                      <div className='popup-title'>{this.props.title}</div>
-                  }
-                  <div className='popup-content'>
-                      {this.props.children}
-                  </div>
-                  <div className='popup-footer'>
-                      <Button
-                          className='flat'
-                          text={this.props.action_one_text}
-                          onClick={this.props.action_one}
-                          has_effect
-                      />
-                      <Button
-                          className='flat'
-                          text={this.props.action_two_text}
-                          onClick={this.props.action_two}
-                          has_effect
-                      />
-                  </div>
-              </div>
-          </div>
+            <div
+                className={popup_backdrop_class}
+                style={visibility}
+            >
+                <div
+                    className={popup_class}
+                    style={visibility}
+                >
+                    <div className='popup-close' onClick={this.props.onClose}>
+                        <img src={Url.urlForStatic('images/trading_app/close.svg')} alt='Close' />
+                    </div>
+                    {!!this.props.title &&
+                        <div className='popup-title'>{this.props.title}</div>
+                    }
+                    <div className='popup-content'>
+                        {this.props.children}
+                    </div>
+                    <div className='popup-footer'>
+                        <Button
+                            className='flat'
+                            text={this.props.action_one_text}
+                            onClick={this.props.action_one}
+                            has_effect
+                        />
+                        <Button
+                            className='flat'
+                            text={this.props.action_two_text}
+                            onClick={this.props.action_two}
+                            has_effect
+                        />
+                    </div>
+                </div>
+            </div>
         );
     }
 }
 
+// TODO: Remove defaultProps dummy values
 Modal.defaultProps = {
     title: 'Title Goes Here',
 };
