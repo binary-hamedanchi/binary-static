@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import InputField from './form/input_field.jsx';
-import Dropdown from './form/dropdown.jsx';
 import Datepicker from './form/date_picker.jsx';
+import Dropdown from './form/dropdown.jsx';
+import Fieldset from './elements/fieldset.jsx';
 import TimePicker from './form/time_picker.jsx';
-import ClockHeader from './elements/clock_header.jsx';
 import { connect } from '../store/connect';
 import { localize } from '../../../../_common/localize';
 
@@ -12,6 +12,10 @@ const expiry_list = [
     { text: localize('Duration'), value: 'duration' },
     { text: localize('End Time'), value: 'endtime' },
 ];
+
+let min_date_duration,
+    max_date_duration,
+    min_date_expiry;
 
 const Duration = ({
     expiry_type,
@@ -21,9 +25,20 @@ const Duration = ({
     duration_units_list,
     server_time,
     onChange,
-}) => (
-        <fieldset>
-            <ClockHeader time={server_time} header={localize('Trade Duration')} />
+}) => {
+    const moment_now = moment(server_time);
+    if (!min_date_expiry || moment_now.date() !== min_date_expiry.date()) {
+        min_date_duration = moment_now.clone().add(1, 'd');
+        max_date_duration = moment_now.clone().add(365, 'd');
+        min_date_expiry   = moment_now.clone();
+    }
+    return (
+        <Fieldset
+            time={server_time}
+            header={localize('Trade Duration')}
+            icon='trade-duration'
+            tooltip={localize('Text for Duration goes here.')}
+        >
             <Dropdown
                 list={expiry_list}
                 value={expiry_type}
@@ -37,8 +52,8 @@ const Duration = ({
                         {duration_unit === 'd' ?
                             <Datepicker
                                 name='duration'
-                                minDate={moment(server_time).add(1, 'd')}
-                                maxDate={moment(server_time).add(365, 'd')}
+                                minDate={min_date_duration}
+                                maxDate={max_date_duration}
                                 displayFormat='d'
                                 onChange={onChange}
                             /> :
@@ -60,15 +75,16 @@ const Duration = ({
                 <React.Fragment>
                     <Datepicker
                         name='expiry_date'
-                        showTodayBtn={true}
-                        minDate={moment(server_time)}
+                        showTodayBtn
+                        minDate={min_date_expiry}
                         onChange={onChange}
                     />
                     <TimePicker onChange={onChange} name='expiry_time' value={expiry_time} placeholder='12:00 pm' />
                 </React.Fragment>
             }
-        </fieldset>
-);
+        </Fieldset>
+    );
+};
 
 export default connect(
     ({trade}) => ({
