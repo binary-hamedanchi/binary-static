@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 
 class Tabs extends React.PureComponent {
     constructor(props) {
@@ -9,23 +10,33 @@ class Tabs extends React.PureComponent {
         this.setState({active_tab_index: active});
     };
     render() {
-        const className = 'tab-container';
+        const tab_container_class = classNames('tab-container', this.props.alignment);
+        const tab_header_class = (icon_name) => classNames({
+            icon: icon_name },
+            icon_name,
+        );
         return (
-            <div className={`${className} ${this.props.alignment}`}>
+            <div className={tab_container_class}>
                 <TabsWrapper
-                  active={this.state.active_tab_index}
-                  onChange={active => this.setActiveTab(active)}
+                    active={this.state.active_tab_index}
+                    onChange={active => this.setActiveTab(active)}
                 >
-                {Object.keys(this.props.list).map(key => (
-                    <React.Fragment key={key}>
-                        {!!this.props.list[key].icon &&
-                            <i className={this.props.list[key].icon}></i>
-                        }
-                        <span>{this.props.list[key].header}</span>
-                    </React.Fragment>
-                ))}
+                    {Object.keys(this.props.list).map(key => (
+                        <React.Fragment key={key}>
+                            <span
+                                className={tab_header_class(this.props.list[key].icon)}
+                                title={this.props.list[key].header}
+                            >
+                                {this.props.list[key].header}
+                            </span>
+                        </React.Fragment>
+                    ))}
                 </TabsWrapper>
-                <p className='tab-content'>{this.props.list[this.state.active_tab_index].content}</p>
+                <div className='tab-content'>
+                    <p>
+                        {this.props.list[this.state.active_tab_index].content}
+                    </p>
+                </div>
             </div>
         );
     }
@@ -77,30 +88,30 @@ class TabsWrapper extends React.PureComponent {
 
     render() {
         return (
-          <div
-            className='tab-wrapper'
-            ref={el => this.root = el}
-          >
-            {React.Children.map(this.props.children, (child, i) => {
-                const className = 'tab';
-                return (
-                    <div
-                      key={i}
-                      className={child.key === this.props.active ? `${className} tab--active` : className}
-                      onClick={() => {
-                          this.props.onChange(child.key);
-                      }}
-                      ref={el => this.els[child.key] = el}
-                    >
-                      {child}
-                    </div>
-                );
-            })}
             <div
-              className='tab-underline'
-              style={this.getUnderlineStyle()}
-            />
-          </div>
+                className='tab-wrapper'
+                ref={el => this.root = el}
+            >
+                {React.Children.map(this.props.children, (child, i) => {
+                    const className = 'tab';
+                    return (
+                        <div
+                            key={i}
+                            className={child.key === this.props.active ? `${className} tab--active` : className}
+                            onClick={() => {
+                                this.props.onChange(child.key);
+                            }}
+                            ref={el => this.els[child.key] = el}
+                        >
+                            {child}
+                        </div>
+                    );
+                })}
+                <div
+                    className='tab-underline'
+                    style={this.getUnderlineStyle()}
+                />
+            </div>
         );
     }
 

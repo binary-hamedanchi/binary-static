@@ -21,22 +21,43 @@
         width: 100%;
     }
     .tab {
-        display: inline-block;
-        padding: 16px;
-        background: #fff;
-        color: #333333;
-        cursor: pointer;
-        font-weight: 300;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-evenly;
 
-        i {
-            padding-right: 8px;
-        }
         span {
+            padding: 16px;
+            color: #333333;
+            cursor: pointer;
+            font-weight: 300;
             font-size: 1rem;
+
+            &.icon {
+                padding: 16px 18px 16px 34px;
+
+                &:before {
+                    position: absolute;
+                    top: 16px;
+                    left: 14px;
+                }
+                &.trade:before {
+                    content: url('../images/trading_app/header/icons/ic_trade_normal_light.svg');
+                }
+            }
+            &:after {
+                display: block;
+                content: attr(title);
+                font-weight: 400;
+                height: 0;
+                overflow: hidden;
+                visibility: hidden;
+            }
         }
         &:hover, &--active {
-            color: #2a3052;
-            font-weight: 400;
+            span {
+                color: #2a3052;
+                font-weight: 400;
+            }
         }
     }
     .tab-underline {
@@ -47,9 +68,11 @@
         border-bottom: 2px solid #2a3052;
     }
     .tab-content {
-        font-size: 1.125rem;
-        line-height: 1.4em;
-        text-align: left;
+        p {
+            font-size: 1.125rem;
+            line-height: 1.4em;
+            text-align: left;
+        }
     }
 }
 /* stylelint-enable number-max-precision */
