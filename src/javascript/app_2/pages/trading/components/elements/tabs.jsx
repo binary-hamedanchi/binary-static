@@ -6,10 +6,11 @@ class Tabs extends React.PureComponent {
         super(props);
         this.state = { active_tab_index: '1' };
     }
-    setActiveTab(active) {
-        this.setState({active_tab_index: active});
+    setActiveTab(index) {
+        this.setState({active_tab_index: index});
     };
     render() {
+        const TabContents = this.props.list[this.state.active_tab_index].content;
         const tab_container_class = classNames('tab-container', this.props.alignment);
         const tab_header_class = (icon_name) => classNames({
             icon: icon_name },
@@ -32,11 +33,7 @@ class Tabs extends React.PureComponent {
                         </React.Fragment>
                     ))}
                 </TabsWrapper>
-                <div className='tab-content'>
-                    <p>
-                        {this.props.list[this.state.active_tab_index].content}
-                    </p>
-                </div>
+                <TabContents />
             </div>
         );
     }
@@ -93,11 +90,14 @@ class TabsWrapper extends React.PureComponent {
                 ref={el => this.root = el}
             >
                 {React.Children.map(this.props.children, (child, i) => {
-                    const className = 'tab';
+                    const tab_class = classNames(
+                        'tab',
+                        { 'tab--active': child.key === this.props.active },
+                    );
                     return (
                         <div
                             key={i}
-                            className={child.key === this.props.active ? `${className} tab--active` : className}
+                            className={tab_class}
                             onClick={() => {
                                 this.props.onChange(child.key);
                             }}
@@ -130,12 +130,25 @@ class TabsWrapper extends React.PureComponent {
     }
 }
 
-// Dummy values
+// TO-DO: Remove dummy values
+const TabContent1 = () => (
+    <div className='tab-content'><p>Content 1</p></div>
+);
+const TabContent2 = () => (
+    <div className='tab-content'><p>Content 2</p></div>
+);
+const TabContent3 = () => (
+    <div className='tab-content'><p>Content 3</p></div>
+);
+const TabContent4 = () => (
+    <div className='tab-content'><p>Content 4</p></div>
+);
+
 const content = {
-    1: { header: 'Tab 1', content: 'Content 1' },
-    2: { header: 'Tab 2', content: 'Content 2' },
-    3: { header: 'Tab 3', content: 'Content 3' },
-    4: { header: 'Tab 4', content: 'Content 4' },
+    1: { header: 'Tab 1', content: TabContent1 },
+    2: { header: 'Tab 2', content: TabContent2 },
+    3: { header: 'Tab 3', content: TabContent3 },
+    4: { header: 'Tab 4', content: TabContent4 },
 };
 
 Tabs.defaultProps = {

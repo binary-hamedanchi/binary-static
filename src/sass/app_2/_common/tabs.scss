@@ -40,9 +40,6 @@
                     top: 16px;
                     left: 14px;
                 }
-                &.trade:before {
-                    content: url('../images/trading_app/header/icons/ic_trade_normal_light.svg');
-                }
             }
             &:after {
                 display: block;
@@ -65,7 +62,7 @@
         bottom: -1px;
         left: 0;
         right: 0;
-        border-bottom: 2px solid #2a3052;
+        border-bottom: 3px solid #2a3052;
     }
     .tab-content {
         p {
