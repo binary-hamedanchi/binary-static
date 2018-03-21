@@ -7,8 +7,9 @@ class PortfolioDrawer extends React.Component {
         super(props);
         this.handleVisibility = this.handleVisibility.bind(this);
         this.state = {
-            is_open: true,
-            width  : window.innerWidth,
+            is_open   : true,
+            width     : window.innerWidth,
+            active_idx: null,
         };
     }
 
@@ -43,6 +44,15 @@ class PortfolioDrawer extends React.Component {
         return time_left;
     };
 
+    onClick = (portfolio, idx) => {
+        if (this.state.active_idx !== idx) {
+            this.setState({ active_idx: idx });
+        } else {
+            this.setState({ active_idx: null });
+        }
+        this.props.onSelect(portfolio);
+    };
+
     render() {
         const { width } = this.state;
         const is_mobile = width <= 1024;
@@ -74,7 +84,11 @@ class PortfolioDrawer extends React.Component {
                 <div className={`portfolio-list ${this.state.is_open ? 'show': '' }`}>
                     {
                         this.props.portfolios.map((portfolio, idx) => (
-                            <div key={idx} className='portfolio'>
+                            <div
+                                key={idx}
+                                className={`portfolio ${this.state.active_idx === idx ? 'active' : ''}`}
+                                onClick={this.onClick.bind(this, portfolio, idx)}
+                            >
                                 <span className='ic-portfolio' />
                                 <div className='asset'>
                                     <span className='symbol'>{portfolio.symbol}</span>

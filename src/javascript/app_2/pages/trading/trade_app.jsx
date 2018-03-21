@@ -10,6 +10,7 @@ import Test from './components/test.jsx';
 import Purchase from './components/purchase.jsx';
 import { connect } from './store/connect';
 import PortfolioDrawer from './components/elements/portfolio_drawer.jsx';
+import ContractDetails from './components/contract_details.jsx';
 
 class TradeApp extends React.Component {
     isVisible(component_name) {
@@ -17,6 +18,17 @@ class TradeApp extends React.Component {
     }
 
     render() {
+        const TradeControls = (
+            <React.Fragment>
+                {this.isVisible('start_date') && <StartDate />}
+                <Duration />
+                {this.isVisible('barrier') && <Barrier />}
+                {this.isVisible('last_digit') && <LastDigit />}
+                <Amount />
+                <Purchase />
+            </React.Fragment>
+        );
+
         return (
             <div id='trade_container' className={this.props.is_portfolio_drawer_on ? 'show' : undefined}>
                 <div className='chart-container notice-msg'>
@@ -25,20 +37,22 @@ class TradeApp extends React.Component {
                     <Test />
                 </div>
                 <div className='sidebar-container desktop-only'>
-
-                    {this.isVisible('start_date') && <StartDate />}
-                    <Duration />
-                    {this.isVisible('barrier') && <Barrier />}
-                    {this.isVisible('last_digit') && <LastDigit />}
-                    <Amount />
-
-                    <Purchase />
+                    {
+                        this.props.is_portfolio_selected ?
+                            <ContractDetails
+                                portfolio={this.props.selected_portfolio}
+                                onClick={this.props.toggleActivePortfolio}
+                            />
+                            :
+                            TradeControls
+                    }
                 </div>
 
                 <div className='offset-container'>
                     <PortfolioDrawer
                         onClick={this.props.togglePortfolioDrawer}
                         portfolios={this.props.portfolios}
+                        onSelect={this.props.setActivePortfolio}
                     />
                 </div>
             </div>
@@ -52,5 +66,9 @@ export default connect(
         portfolios            : trade.portfolios,
         is_portfolio_drawer_on: ui.is_portfolio_drawer_on,
         togglePortfolioDrawer : ui.togglePortfolioDrawer,
+        selected_portfolio    : ui.selected_portfolio,
+        setActivePortfolio    : ui.setActivePortfolio,
+        is_portfolio_selected : ui.is_portfolio_selected,
+        toggleActivePortfolio : ui.toggleActivePortfolio,
     })
 )(TradeApp);

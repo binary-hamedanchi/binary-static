@@ -47,6 +47,9 @@
         &:hover {
             border-color: $COLOR_BLUE;
         }
+        &.active {
+            border-color: $COLOR_BLUE;
+        }
         &:active, &:focus {
             outline: 0;
             border-radius: 4px;
@@ -149,5 +152,74 @@
                 content: '\002303';
             }
         }
+    }
+}
+
+.contract-details-table {
+    .table {
+        margin-bottom: 5px;
+    }
+    .table-thead {
+        font-size: 0.75rem;
+        line-height: 1;
+        text-transform: uppercase;
+        color: $COLOR_BLUE;
+
+        th {
+            text-align: center !important;
+        }
+    }
+    .table-tbody {
+        font-size: 0.75rem;
+        line-height: 1;
+
+        td {
+            padding: 10px 4px !important;
+
+            .td-value {
+                color: $COLOR_BLUE;
+                font-weight: 600;
+                display: block;
+            }
+            span + .td-value {
+                margin-top: 0.5rem;
+            }
+        }
+    }
+    .custom {
+        .table-thead {
+            font-size: 1rem;
+            color: $COLOR_WHITE;
+            text-transform: none;
+
+            th {
+                background-color: $COLOR_ORANGE;
+                border-radius: 0;
+            }
+        }
+        .link {
+            color: #2196f3;  /* stylelint-disable-line color-no-hex */
+            font-weight: bold;
+        }
+        th, td {
+            text-align: center !important;
+            line-height: 1.25;
+        }
+    }
+}
+
+.contract-purchase {
+    text-align: center;
+
+    h4 {
+        color: $COLOR_WHITE;
+        background: $COLOR_ORANGE;
+    }
+}
+
+.contract-details {
+    button {
+        margin: auto;
+        width: 100%;
     }
 }
