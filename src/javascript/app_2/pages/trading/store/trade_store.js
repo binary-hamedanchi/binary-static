@@ -79,7 +79,7 @@ export default class TradeStore {
     @observable server_time = undefined;
 
     // TODO: to remove dummy portfolio value
-    @observable portfolios = [
+    @observable portfolio = [
         {
             transaction_id: 32355620467,
             contract_id   : 478981052055,

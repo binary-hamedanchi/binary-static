@@ -44,13 +44,13 @@ class PortfolioDrawer extends React.Component {
         return time_left;
     };
 
-    onClick = (portfolio, idx) => {
+    onClick = (contract, idx) => {
         if (this.state.active_idx !== idx) {
             this.setState({ active_idx: idx });
         } else {
             this.setState({ active_idx: null });
         }
-        this.props.onSelect(portfolio);
+        this.props.onSelect(contract);
     };
 
     render() {
@@ -83,19 +83,19 @@ class PortfolioDrawer extends React.Component {
                 { header }
                 <div className={`portfolio-list ${this.state.is_open ? 'show': '' }`}>
                     {
-                        this.props.portfolios.map((portfolio, idx) => (
+                        this.props.portfolio.map((contract, idx) => (
                             <div
                                 key={idx}
                                 className={`portfolio ${this.state.active_idx === idx ? 'active' : ''}`}
-                                onClick={this.onClick.bind(this, portfolio, idx)}
+                                onClick={this.onClick.bind(this, contract, idx)}
                             >
                                 <span className='ic-portfolio' />
                                 <div className='asset'>
-                                    <span className='symbol'>{portfolio.symbol}</span>
-                                    <span className={`indicative-${this.getIndicative(portfolio.buy_price).value > 0 ? 'positive' : 'negative'}`}>
-                                        {this.getIndicative(portfolio.buy_price).display}
+                                    <span className='symbol'>{contract.symbol}</span>
+                                    <span className={`indicative-${this.getIndicative(contract.buy_price).value > 0 ? 'positive' : 'negative'}`}>
+                                        {this.getIndicative(contract.buy_price).display}
                                     </span>
-                                    <span className='remaining-time'>{moment(this.getRemainingTime(portfolio.expiry_time)).format(is_mobile ? 'HH:mm' : 'HH:mm:ss')}</span>
+                                    <span className='remaining-time'>{moment(this.getRemainingTime(contract.expiry_time)).format(is_mobile ? 'HH:mm' : 'HH:mm:ss')}</span>
                                 </div>
                             </div>
                         ))

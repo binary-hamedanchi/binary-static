@@ -45,7 +45,7 @@ class TradeApp extends React.Component {
                 <div className='offset-container'>
                     <PortfolioDrawer
                         onClick={this.props.togglePortfolioDrawer}
-                        portfolios={this.props.portfolios}
+                        portfolio={this.props.portfolio}
                         onSelect={this.props.setActivePortfolio}
                     />
                 </div>
@@ -57,7 +57,7 @@ class TradeApp extends React.Component {
 export default connect(
     ({ trade, ui }) => ({
         form_components       : trade.form_components,
-        portfolios            : trade.portfolios,
+        portfolio             : trade.portfolio,
         is_portfolio_drawer_on: ui.is_portfolio_drawer_on,
         togglePortfolioDrawer : ui.togglePortfolioDrawer,
         selected_portfolio    : ui.selected_portfolio,
