@@ -8,7 +8,6 @@ class PortfolioDrawer extends React.Component {
         this.handleVisibility = this.handleVisibility.bind(this);
         this.state = {
             is_open   : true,
-            width     : window.innerWidth,
             active_idx: null,
         };
     }
@@ -54,19 +53,8 @@ class PortfolioDrawer extends React.Component {
     };
 
     render() {
-        const { width } = this.state;
-        const is_mobile = width <= 1024;
-        const header = (
-            is_mobile ?
-                <div
-                    className='portfolio-drawer-header'
-                    onClick={this.handleVisibility}
-                >
-                    <span className='ic-portfolio' />
-                    <p>{localize('Portfolio')}</p>
-                    <span className={`ic-close ${this.state.is_open ? 'open': '' }`} />
-                </div>
-                :
+        return (
+            <div className='portfolio-drawer'>
                 <div className='portfolio-drawer-header'>
                     <span className='ic-portfolio' />
                     <p>{localize('Portfolio Quick Menu')}</p>
@@ -76,11 +64,6 @@ class PortfolioDrawer extends React.Component {
                         onClick={this.props.onClick}
                     />
                 </div>
-        );
-
-        return (
-            <div className='portfolio-drawer'>
-                { header }
                 <div className={`portfolio-list ${this.state.is_open ? 'show': '' }`}>
                     {
                         this.props.portfolio.map((contract, idx) => (
@@ -95,7 +78,7 @@ class PortfolioDrawer extends React.Component {
                                     <span className={`indicative-${this.getIndicative(contract.buy_price).value > 0 ? 'positive' : 'negative'}`}>
                                         {this.getIndicative(contract.buy_price).display}
                                     </span>
-                                    <span className='remaining-time'>{moment(this.getRemainingTime(contract.expiry_time)).format(is_mobile ? 'HH:mm' : 'HH:mm:ss')}</span>
+                                    <span className='remaining-time'>{moment(this.getRemainingTime(contract.expiry_time)).format('HH:mm:ss')}</span>
                                 </div>
                             </div>
                         ))

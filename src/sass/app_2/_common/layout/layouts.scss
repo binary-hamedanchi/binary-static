@@ -15,6 +15,9 @@
         .sidebar-container {
             position: relative;
         }
+        .offset-container {
+            display: none;
+        }
         & > * {
             grid-column: col-start / span 12;
         }
@@ -63,6 +66,7 @@
                 left: calc(100% + 20px);
                 transition: all 0.25s;
                 grid-column: col-start 11 / span 2;
+                display: block;
             }
             &.show {
                 margin-right: 0;
