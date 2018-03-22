@@ -55,7 +55,7 @@
     }
     label.input-label {
         font-size: 0.875rem; /* stylelint-disable-line number-max-precision */
-        color: #333333; /* stylelint-disable-line color-no-hex */
+        color: $COLOR_DARK_GRAY;
         font-weight: 400;
     }
     span.input-helper {
