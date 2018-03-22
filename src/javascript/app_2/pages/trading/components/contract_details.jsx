@@ -159,7 +159,7 @@ class ContractDetails extends React.PureComponent {
                             title='Contract Performance'
                             rows={contract_performance_rows}
                         />
-                        <table className='table custom'>
+                        <table className='table custom-table'>
                             <thead className='table-thead'>
                                 <tr>
                                     <th colSpan='3'>
