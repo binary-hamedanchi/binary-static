@@ -157,6 +157,7 @@
 
 .contract-details-table {
     .table {
+        width: 100%;
         margin-bottom: 5px;
     }
     .table-thead {
@@ -221,5 +222,42 @@
     button {
         margin: auto;
         width: 100%;
+    }
+}
+
+.fade-in {
+    animation: fadeIn ease-in 1;
+    animation-duration: 0.3s;
+
+    > * {
+        display: block;
+    }
+}
+
+.fade-out {
+    animation: fadeOut ease-out 1;
+    animation-duration: 0.3s;
+
+    > * {
+        display: none;
+    }
+}
+
+// Keyframes
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
     }
 }

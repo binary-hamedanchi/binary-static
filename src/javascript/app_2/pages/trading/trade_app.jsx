@@ -18,17 +18,6 @@ class TradeApp extends React.Component {
     }
 
     render() {
-        const TradeControls = (
-            <React.Fragment>
-                {this.isVisible('start_date') && <StartDate />}
-                <Duration />
-                {this.isVisible('barrier') && <Barrier />}
-                {this.isVisible('last_digit') && <LastDigit />}
-                <Amount />
-                <Purchase />
-            </React.Fragment>
-        );
-
         return (
             <div id='trade_container' className={this.props.is_portfolio_drawer_on ? 'show' : undefined}>
                 <div className='chart-container notice-msg'>
@@ -37,15 +26,20 @@ class TradeApp extends React.Component {
                     <Test />
                 </div>
                 <div className='sidebar-container desktop-only'>
-                    {
-                        this.props.is_portfolio_selected ?
-                            <ContractDetails
-                                portfolio={this.props.selected_portfolio}
-                                onClick={this.props.toggleActivePortfolio}
-                            />
-                            :
-                            TradeControls
-                    }
+                    <div className={`${this.props.is_portfolio_selected ? 'fade-out' : 'fade-in'}`}>
+                        {this.isVisible('start_date') && <StartDate />}
+                        <Duration />
+                        {this.isVisible('barrier') && <Barrier />}
+                        {this.isVisible('last_digit') && <LastDigit />}
+                        <Amount />
+                        <Purchase />
+                    </div>
+                    <div className={`${this.props.is_portfolio_selected ? 'fade-in' : 'fade-out'}`}>
+                        <ContractDetails
+                            portfolio={this.props.selected_portfolio}
+                            onClick={this.props.toggleActivePortfolio}
+                        />
+                    </div>
                 </div>
 
                 <div className='offset-container'>
