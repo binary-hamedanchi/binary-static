@@ -30,15 +30,16 @@ class Sidebar extends React.PureComponent {
     render() {
         const { selectedId, openTargetId } = this.state;
         return (
-          <div className='sidebar-wrapper' id={this.props.id}>
-              <SidebarSubmenu
-                items={this.props.items}
-                onClick={this.onClick}
-                selectedId={selectedId}
-                openSubmenu={this.openSubmenu}
-                openTargetId={openTargetId} />
-              <SidebarContent content={this.props.content} selectedId={selectedId} />
-          </div>
+            <div className='sidebar-wrapper' id={this.props.id}>
+                <SidebarSubmenu
+                    items={this.props.items}
+                    onClick={this.onClick}
+                    selectedId={selectedId}
+                    openSubmenu={this.openSubmenu}
+                    openTargetId={openTargetId}
+                />
+                <SidebarContent content={this.props.content} selectedId={selectedId} />
+            </div>
         );
     }
 };
@@ -46,13 +47,13 @@ class Sidebar extends React.PureComponent {
 class SidebarContent extends React.PureComponent {
     render() {
         return (
-          <div className='sidebar-collapsible-content'>
-              {this.props.content && this.props.content.map((item, idx) => (
-                <div key={idx} id={item.id} className={this.props.selectedId === item.id ? 'visible' : 'invisible'}>
-                    {item.cont}
-                </div>
-              ))}
-          </div>
+            <div className='sidebar-collapsible-content'>
+                {this.props.content && this.props.content.map((item, idx) => (
+                    <div key={idx} id={item.id} className={this.props.selectedId === item.id ? 'visible' : 'invisible'}>
+                        {item.cont}
+                    </div>
+                ))}
+            </div>
         );
     }
 }
@@ -65,42 +66,49 @@ class SidebarSubmenu extends React.PureComponent {
             <div className='sidebar-submenu'>
                 <ul>
                     {this.props.items && this.props.items.map((item, idx) => (
-                      <li
-                        key={idx}
-                        className={(item.submenu ? 'has-submenu' : '') + (item.id === this.props.selectedId ? 'active' : '')}>
-                          { item.submenu &&
-                          <React.Fragment>
-                              <a
-                                id={item.id}
-                                className={openTargetId === item.id ? 'selected' : ''}
-                                href={getHref(item.id)}
-                                onClick={this.props.openSubmenu}>
-                                  {item.text}
-                              </a>
-                              <ul className={openTargetId === item.id ? 'collapsed' : 'compressed'}>
-                                  { item.submenu.map((submenu, idx_submenu) => (
-                                    <li key={idx_submenu}
-                                        className={submenu.id === this.props.selectedId ? 'active' : ''}>
-                                        <a
-                                          id={submenu.id}
-                                          onClick={this.props.onClick}
-                                          className={`submenu-item ${submenu.id === this.props.selectedId ? 'selected' : ''}`}
-                                          href={getHref(submenu.id)}>
-                                            {submenu.text}
-                                        </a>
-                                    </li>
-                                  ))}
-                              </ul>
-                          </React.Fragment>}
-                          { !item.submenu && item.text &&
-                            <a
-                              className={item.id === this.props.selectedId ? 'selected' : ''}
-                              id={item.id}
-                              onClick={this.props.onClick}
-                              href={getHref(item.id)}>{item.text}
-                            </a>
-                          }
-                      </li>
+                        <li
+                            key={idx}
+                            className={(item.submenu ? 'has-submenu' : '') + (item.id === this.props.selectedId ? 'active' : '')}
+                        >
+                            { item.submenu &&
+                            <React.Fragment>
+                                <a
+                                    id={item.id}
+                                    className={openTargetId === item.id ? 'selected' : ''}
+                                    href={getHref(item.id)}
+                                    onClick={this.props.openSubmenu}
+                                >
+                                    {item.text}
+                                </a>
+                                <ul className={openTargetId === item.id ? 'collapsed' : 'compressed'}>
+                                    { item.submenu.map((submenu, idx_submenu) => (
+                                        <li
+                                            key={idx_submenu}
+                                            className={submenu.id === this.props.selectedId ? 'active' : ''}
+                                        >
+                                            <a
+                                                id={submenu.id}
+                                                onClick={this.props.onClick}
+                                                className={`submenu-item ${submenu.id === this.props.selectedId ? 'selected' : ''}`}
+                                                href={getHref(submenu.id)}
+                                            >
+                                                {submenu.text}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </React.Fragment>}
+                            { !item.submenu && item.text &&
+                                <a
+                                    className={item.id === this.props.selectedId ? 'selected' : ''}
+                                    id={item.id}
+                                    onClick={this.props.onClick}
+                                    href={getHref(item.id)}
+                                >
+                                    {item.text}
+                                </a>
+                            }
+                        </li>
                     ))}
                 </ul>
             </div>

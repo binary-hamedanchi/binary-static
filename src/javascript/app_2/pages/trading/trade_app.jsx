@@ -8,6 +8,7 @@ import StartDate from './components/start_date.jsx';
 import Symbol from './components/symbol.jsx';
 import Test from './components/test.jsx';
 import Purchase from './components/purchase.jsx';
+import PortfolioDrawer from './components/elements/portfolio_drawer.jsx';
 import { connect } from './store/connect';
 
 class TradeApp extends React.Component {
