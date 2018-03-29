@@ -1,11 +1,17 @@
 import React from 'react';
+import Popover from './popover.jsx';
 import { connect } from '../../store/connect';
 
 const TogglePortfolioDrawer = ({...props}) => (
-    <a href='javascript:;'
-       className={`${props.is_portfolio_drawer_on ? 'ic-portfolio-active' : 'ic-portfolio' }`}
-       onClick={props.togglePortfolioDrawer}
-    />
+    <Popover
+        subtitle='Toggle Portfolio'
+    >
+        <a
+            href='javascript:;'
+            className={`${props.is_portfolio_drawer_on ? 'ic-portfolio-active' : 'ic-portfolio' }`}
+            onClick={props.togglePortfolioDrawer}
+        />
+    </Popover>
 );
 
 const fullscreen_map = {
@@ -51,10 +57,16 @@ class ToggleFullScreen extends React.Component {
 
     render() {
         return (
-            <a href='javascript:;'
-               className='ic-fullscreen'
-               onClick={this.toggleFullScreen}
-            />
+            <Popover
+                subtitle='Toggle Fullscreen'
+                alignment='top-right'
+            >
+                <a
+                    href='javascript:;'
+                    className='ic-fullscreen'
+                    onClick={this.toggleFullScreen}
+                />
+            </Popover>
         );
     }
 }
@@ -63,17 +75,22 @@ class TradingFooter extends React.Component {
     render() {
         return (
             <React.Fragment>
-            {this.props.items.length &&
-                <div className='footer-links'>
-                    <TogglePortfolioDrawer {...this.props} />
-                    {this.props.items.map((item, idx) => (
-                        <a key={idx} href={item.href || 'javascript:;'}>
-                            <span className={item.icon} title={item.text} />
-                        </a>
-                    ))}
-                    <ToggleFullScreen />
-                </div>
-            }
+                {this.props.items.length &&
+                    <div className='footer-links'>
+                        <TogglePortfolioDrawer {...this.props} />
+                        {this.props.items.map((item, idx) => (
+                            <Popover
+                                key={idx}
+                                subtitle={item.text}
+                            >
+                                <a key={idx} href={item.href || 'javascript:;'} className={item.icon}>
+                                    <span title={item.text} />
+                                </a>
+                            </Popover>
+                        ))}
+                        <ToggleFullScreen />
+                    </div>
+                }
             </React.Fragment>
         );
     }

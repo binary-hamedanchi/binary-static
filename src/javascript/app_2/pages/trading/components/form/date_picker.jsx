@@ -90,7 +90,7 @@ class Calendar extends React.Component {
     }
 
     previousDecade() {
-        this.updateDate(10, 'years', true);
+        this.updateDate(10, 'years', false);
     }
 
     nextCentury() {
@@ -98,7 +98,7 @@ class Calendar extends React.Component {
     }
 
     previousCentury() {
-        this.updateDate(100, 'years', true);
+        this.updateDate(100, 'years', false);
     }
 
     setActiveView(active_view) {
@@ -162,7 +162,12 @@ class Calendar extends React.Component {
     }
 
     onChangeInput(e) {
-        const value = e.target.value;
+        let value = e.target.value;
+
+        if (this.props.mode === 'duration' && value) {
+            value = moment().add(value || 1, 'days');
+        }
+
         this.setState({ selected_date: value }); // update calendar input
 
         if (moment(value, 'YYYY-MM-DD', true).isValid() || !value) {
@@ -182,7 +187,7 @@ class Calendar extends React.Component {
         const date = moment(this.props.minDate).format(this.props.dateFormat);
         this.setState({
             date,
-            selected_date: date,
+            selected_date: '',
         });
     }
 
@@ -212,7 +217,7 @@ class Calendar extends React.Component {
                 || moment(date).isAfter(moment(end_of_month))
                 || moment(date).isBefore(moment(this.props.minDate).subtract(1, 'day'))
                 || moment(date).isAfter(moment(this.props.maxDate));
-            const is_active = moment(date).isSame(moment(this.state.date));
+            const is_active = moment(date).isSame(moment(this.state.date)) && this.state.selected_date;
             const is_today  = moment(date).isSame(moment().utc(), 'day');
 
             days.push(
@@ -254,7 +259,7 @@ class Calendar extends React.Component {
                         onClick={this.handleMonthSelected}
                         data-month={idx}
                     >
-                    {localize(item)}
+                        {localize(item)}
                     </span>
                 ))}
             </div>
@@ -277,7 +282,7 @@ class Calendar extends React.Component {
                         onClick={this.handleYearSelected}
                         data-year={year}
                     >
-                    {year}
+                        {year}
                     </span>
                 ))}
             </div>
@@ -325,15 +330,21 @@ class Calendar extends React.Component {
         const BtnNextMonth = (is_date_view && <span type='button' className='calendar-prev-month-btn' onClick={this.previousMonth} />);
 
         const BtnPrevYear = (
-            <span type='button' className='calendar-prev-year-btn'
-                  onClick={() => (((is_date_view || is_month_view) && this.previousYear())
-                    || (is_year_view && this.previousDecade()) || (is_decade_view && this.previousCentury()) )} />
+            <span
+                type='button'
+                className='calendar-prev-year-btn'
+                onClick={() => (((is_date_view || is_month_view) && this.previousYear())
+                    || (is_year_view && this.previousDecade()) || (is_decade_view && this.previousCentury()) )}
+            />
         );
 
         const BtnNextYear = (
-            <span type='button' className='calendar-next-year-btn'
-                  onClick={() => (((is_date_view || is_month_view) && this.nextYear())
-                    || (is_year_view && this.nextDecade()) || (is_decade_view && this.nextCentury()) )} />
+            <span
+                type='button'
+                className='calendar-next-year-btn'
+                onClick={() => (((is_date_view || is_month_view) && this.nextYear())
+                    || (is_year_view && this.nextDecade()) || (is_decade_view && this.nextCentury()) )}
+            />
         );
 
         const SelectMonth = (is_date_view &&
@@ -343,8 +354,11 @@ class Calendar extends React.Component {
         );
 
         const SelectYear = (
-            <span type='button' className='calendar-select-year-btn'
-                  onClick={() => ((is_date_view || is_month_view) ? this.setActiveView('year') : this.setActiveView('decade'))}>
+            <span
+                type='button'
+                className='calendar-select-year-btn'
+                onClick={() => ((is_date_view || is_month_view) ? this.setActiveView('year') : this.setActiveView('decade'))}
+            >
                 { moment(this.state.date).year() }
                 { is_year_view   && `-${moment(this.state.date).add(9, 'years').year()}`  }
                 { is_decade_view && `-${moment(this.state.date).add(99, 'years').year()}` }
@@ -355,12 +369,14 @@ class Calendar extends React.Component {
             || (is_year_view && this.getYears()) || (is_decade_view && this.getDecades())
         );
 
+        const value = this.props.mode === 'duration' ? getDayDifference(this.state.selected_date) : this.state.selected_date;
+
         return (
             <div className='calendar'>
                 <input
                     type='text'
-                    placeholder='Select date'
-                    value={this.state.selected_date}
+                    placeholder={this.props.mode === 'duration' ? localize('Select a duration') : localize('Select date')}
+                    value={value}
                     onChange={this.onChangeInput}
                     className='calendar-input'
                 />
@@ -399,10 +415,10 @@ Calendar.defaultProps = {
 
 const getDayDifference = (date) => {
     const diff = moment(date).diff(moment().utc(), 'days');
-    return (!date || diff < 0) ? 1 : diff + 1;
+    return (!date || diff < 0) ? '' : diff + 1;
 };
 
-class DatePicker extends React.Component {
+class DatePicker extends React.PureComponent {
     constructor(props) {
         super(props);
 
@@ -412,10 +428,6 @@ class DatePicker extends React.Component {
         this.handleMouseEnter   = this.handleMouseEnter.bind(this);
         this.handleMouseLeave   = this.handleMouseLeave.bind(this);
 
-        this.clearDateInput = this.clearDateInput.bind(this);
-        this.getPickerValue = this.getPickerValue.bind(this);
-        this.setPickerValue = this.setPickerValue.bind(this);
-
         this.state = {
             selected_date       : moment(this.props.minDate).format(this.props.dateFormat),
             is_calendar_visible : false,
@@ -424,6 +436,10 @@ class DatePicker extends React.Component {
     }
 
     componentDidMount() {
+        this.props.onChange({ target: { name: this.props.name, value: this.getPickerValue() } });
+    }
+
+    componentDidUpdate() {
         this.props.onChange({ target: { name: this.props.name, value: this.getPickerValue() } });
     }
 
@@ -467,27 +483,17 @@ class DatePicker extends React.Component {
             selected_date: value,
             is_calendar_visible,
         });
-
-        this.setPickerValue(value);
     }
 
-    clearDateInput() {
+    clearDateInput = () => {
         this.setState({ selected_date: '' });
-        this.setPickerValue();
         this.calendar.resetCalendar();
-    }
+    };
 
-    getPickerValue() {
-        return this.props.displayFormat === 'd' ? getDayDifference(this.state.selected_date) : this.state.selected_date;
-    }
-
-    setPickerValue(value) {
-        const val = this.props.displayFormat === 'd' ? getDayDifference(value) : value;
-        this.props.onChange({ target: { name: this.props.name, value: val } });
-    }
+    getPickerValue = () => (this.props.mode === 'duration' ? getDayDifference(this.state.selected_date) : this.state.selected_date);
 
     render() {
-        const value =  this.getPickerValue();
+        const value = this.getPickerValue();
         return (
             <div ref={node => { this.mainNode = node; }} className='datepicker-container'>
                 <div
@@ -501,7 +507,7 @@ class DatePicker extends React.Component {
                         className='datepicker-display'
                         value={value}
                         readOnly
-                        placeholder={localize('Select date')}
+                        placeholder={this.props.mode === 'duration' ? localize('Select a duration') : localize('Select date')}
                         onClick={this.handleVisibility}
                     />
                     <span
@@ -514,9 +520,10 @@ class DatePicker extends React.Component {
                     />
                 </div>
                 <div className={`datepicker-calendar ${this.state.is_calendar_visible ? 'show' : ''}`}>
-                    <Calendar ref={node => { this.calendar = node; }}
-                        {...this.props}
+                    <Calendar
+                        ref={node => { this.calendar = node; }}
                         handleDateChange={this.handleDateChange}
+                        {...this.props}
                     />
                 </div>
             </div>
@@ -525,8 +532,8 @@ class DatePicker extends React.Component {
 }
 
 DatePicker.defaultProps = {
-    dateFormat   : 'YYYY-MM-DD',
-    displayFormat: 'date',
+    dateFormat: 'YYYY-MM-DD',
+    mode      : 'date',
 };
 
 export default DatePicker;
