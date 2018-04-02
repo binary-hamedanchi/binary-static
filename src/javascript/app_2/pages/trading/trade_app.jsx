@@ -37,7 +37,7 @@ class TradeApp extends React.Component {
                     <div className={`${this.props.is_portfolio_selected ? 'fade-in' : 'fade-out'}`}>
                         <ContractDetails
                             onClick={this.props.toggleActivePortfolio}
-                            portfolio={this.props.selected_portfolio}
+                            contract={this.props.selected_portfolio}
                             server_time={this.props.server_time}
                         />
                     </div>
