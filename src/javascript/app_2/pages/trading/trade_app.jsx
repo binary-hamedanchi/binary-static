@@ -8,7 +8,7 @@ import StartDate from './components/start_date.jsx';
 import Symbol from './components/symbol.jsx';
 import Test from './components/test.jsx';
 import Purchase from './components/purchase.jsx';
-import ContractDetails from './components/contract_details.jsx';
+import ContractDetails from '../../components/elements/contract_details.jsx';
 import PortfolioDrawer from '../../components/elements/portfolio_drawer.jsx';
 import { connect } from '../../store/connect';
 

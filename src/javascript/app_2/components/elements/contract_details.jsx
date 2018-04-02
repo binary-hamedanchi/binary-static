@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from './form/button.jsx';
-import { localize } from '../../../../_common/localize';
+import Button from '../form/button.jsx';
+import { localize } from '../../../_common/localize';
 
 class ContractTable extends React.PureComponent {
     render() {
