@@ -36,8 +36,9 @@ class TradeApp extends React.Component {
                     </div>
                     <div className={`${this.props.is_portfolio_selected ? 'fade-in' : 'fade-out'}`}>
                         <ContractDetails
-                            portfolio={this.props.selected_portfolio}
                             onClick={this.props.toggleActivePortfolio}
+                            portfolio={this.props.selected_portfolio}
+                            server_time={this.props.server_time}
                         />
                     </div>
                 </div>
@@ -45,7 +46,8 @@ class TradeApp extends React.Component {
                 <div className='offset-container'>
                     <PortfolioDrawer
                         onClick={this.props.togglePortfolioDrawer}
-                        portfolios={this.props.portfolios}
+                        onSelect={this.props.setActivePortfolio}
+                        portfolio={this.props.portfolio}
                         server_time={this.props.server_time}
                     />
                 </div>
@@ -57,7 +59,7 @@ class TradeApp extends React.Component {
 export default connect(
     ({ trade, ui }) => ({
         form_components       : trade.form_components,
-        portfolios            : trade.portfolios,
+        portfolio             : trade.portfolio,
         server_time           : trade.server_time,
         is_portfolio_drawer_on: ui.is_portfolio_drawer_on,
         togglePortfolioDrawer : ui.togglePortfolioDrawer,
