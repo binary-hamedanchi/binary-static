@@ -8,9 +8,9 @@ import StartDate from './components/start_date.jsx';
 import Symbol from './components/symbol.jsx';
 import Test from './components/test.jsx';
 import Purchase from './components/purchase.jsx';
-import { connect } from './store/connect';
-import PortfolioDrawer from './components/elements/portfolio_drawer.jsx';
 import ContractDetails from './components/contract_details.jsx';
+import PortfolioDrawer from '../../components/elements/portfolio_drawer.jsx';
+import { connect } from '../../store/connect';
 
 class TradeApp extends React.Component {
     isVisible(component_name) {
@@ -45,8 +45,8 @@ class TradeApp extends React.Component {
                 <div className='offset-container'>
                     <PortfolioDrawer
                         onClick={this.props.togglePortfolioDrawer}
-                        portfolio={this.props.portfolio}
-                        onSelect={this.props.setActivePortfolio}
+                        portfolios={this.props.portfolios}
+                        server_time={this.props.server_time}
                     />
                 </div>
             </div>
@@ -57,7 +57,8 @@ class TradeApp extends React.Component {
 export default connect(
     ({ trade, ui }) => ({
         form_components       : trade.form_components,
-        portfolio             : trade.portfolio,
+        portfolios            : trade.portfolios,
+        server_time           : trade.server_time,
         is_portfolio_drawer_on: ui.is_portfolio_drawer_on,
         togglePortfolioDrawer : ui.togglePortfolioDrawer,
         selected_portfolio    : ui.selected_portfolio,
