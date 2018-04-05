@@ -42,10 +42,16 @@
             padding-right: 16px;
         }
         & .profit {
-            color: #2e8836; /* stylelint-disable-line color-no-hex */
+            color: $COLOR_LIGHT_GREEN;
         }
         & .loss {
-            color: #c03; /* stylelint-disable-line color-no-hex */
+            color: $COLOR_RED;
+        }
+        & .symbols {
+            font-size: inherit !important;
+            color: inherit !important;
+            position: inherit !important;
+            display: inline-block !important;
         }
     }
     &-pagination {
@@ -55,6 +61,8 @@
 
 // Contract Details table
 .contract-details {
+    background: $COLOR_WHITE;
+
     .table {
         width: 100%;
         margin-bottom: 5px;

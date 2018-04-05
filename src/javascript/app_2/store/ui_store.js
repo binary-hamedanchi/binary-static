@@ -3,7 +3,7 @@ import { observable, action } from 'mobx';
 export default class UIStore {
     @observable is_portfolio_drawer_on = false;
     @observable is_portfolio_selected  = false;
-    @observable selected_portfolio = '';
+    @observable selected_portfolio = {};
 
     @action.bound togglePortfolioDrawer() { // toggle show and hide Portfolio Drawer
         this.is_portfolio_drawer_on = !this.is_portfolio_drawer_on;
@@ -24,6 +24,4 @@ export default class UIStore {
             this.is_portfolio_selected = !this.is_portfolio_selected;
         }
     };
-
-
 };
