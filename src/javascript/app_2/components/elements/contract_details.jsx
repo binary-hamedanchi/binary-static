@@ -125,17 +125,17 @@ class ContractDetails extends React.PureComponent {
         });
     }
 
-    renderTransactionIDs = (ids) => (
+    renderTransactionIDs = ({ buy, sell }) => (
         <React.Fragment>
-            {ids.buy  ? `${ids.buy} (${localize('Buy')})` : ''}
-            {ids.sell ? `${ids.sell} (${localize('Sell')})` : ''}
+            {buy  ? `${buy} (${localize('Buy')})` : ''}
+            {sell ? `${sell} (${localize('Sell')})` : ''}
         </React.Fragment>
     );
 
-    renderContractPurchaseRefs = (id) => (
+    renderContractPurchaseRefs = ({ buy }) => (
         <React.Fragment>
             {localize('Your transaction reference is')}&nbsp;
-            <span className='link'>{id}</span>
+            <span className='link'>{buy || undefined}</span>
         </React.Fragment>
     );
 
@@ -153,7 +153,12 @@ class ContractDetails extends React.PureComponent {
             <React.Fragment>
                 {
                     final_price ?
-                        <Currency currency={currency} amount={profit_loss} percentage={percentage} show_indicative />
+                        <Currency
+                            currency={currency}
+                            amount={profit_loss}
+                            percentage={percentage}
+                            show_indicative
+                        />
                         :
                         <span className='loss'>-</span>
                 }
@@ -168,7 +173,7 @@ class ContractDetails extends React.PureComponent {
 
         const indicative_price = final_price && is_ended ? final_price : (bid_price || null);
 
-        return (<Currency currency={currency} amount={indicative_price} show_indicative />);
+        return (<Currency currency={currency} amount={indicative_price} />);
     };
 
     formatContractDetails = (contract) => {
@@ -177,7 +182,6 @@ class ContractDetails extends React.PureComponent {
             is_settleable,
             is_sold,
             transaction_ids,
-            transaction_id,
             contract_id,
             date_start,
             date_expiry,
@@ -189,6 +193,8 @@ class ContractDetails extends React.PureComponent {
             payout,
             current_spot_time,
             longcode,
+            sell_price,
+            bid_price,
         } = contract;
 
         const is_started    = !is_forward_starting || current_spot_time > date_start;
@@ -198,6 +204,8 @@ class ContractDetails extends React.PureComponent {
             t_end    : date_expiry,
             t_stopped: (!is_started || is_ended),
         };
+
+        const final_price = sell_price || bid_price;
 
         return {
             trade_details_contract_type    : '',
@@ -216,10 +224,10 @@ class ContractDetails extends React.PureComponent {
             trade_details_profit_loss      : this.renderProfitLoss(contract),
             trade_details_current_time     : <Time time={this.props.server_time} />,
             contract_purchase_desc         : longcode,
-            contract_purchase_reference    : this.renderContractPurchaseRefs(transaction_id),
-            contract_purchase_payout       : '',
-            contract_purchase_cost         : '',
-            contract_purchase_profit       : '',
+            contract_purchase_reference    : this.renderContractPurchaseRefs(transaction_ids || {}),
+            contract_purchase_payout       : <Currency currency={currency} amount={payout} />,
+            contract_purchase_cost         : <Currency currency={currency} amount={buy_price} />,
+            contract_purchase_profit       : <Currency currency={currency} amount={final_price - buy_price} />,
         };
     };
 

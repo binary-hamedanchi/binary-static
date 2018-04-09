@@ -8,9 +8,18 @@ class PortfolioDrawer extends React.Component {
         super(props);
         this.handleVisibility = this.handleVisibility.bind(this);
         this.state = {
-            is_open   : true,
+            is_open   : this.props.is_open,
             active_idx: null,
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const is_open = nextProps.is_open;
+        this.setState({ is_open });
+
+        if (!is_open) {
+            this.setState({ active_idx: null });
+        }
     }
 
     handleVisibility() {
@@ -72,7 +81,7 @@ class PortfolioDrawer extends React.Component {
                         this.props.portfolio.map((contract, idx) => (
                             <div
                                 key={idx}
-                                className={`portfolio ${this.state.active_idx === idx ? 'active' : ''}`}
+                                className={`portfolio ${(this.state.active_idx === idx) ? 'active' : ''}`}
                                 onClick={this.onClick.bind(this, contract, idx)}
                             >
                                 <span className='ic-portfolio' />

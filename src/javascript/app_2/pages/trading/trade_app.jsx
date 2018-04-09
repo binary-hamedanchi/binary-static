@@ -49,6 +49,7 @@ class TradeApp extends React.Component {
                         onSelect={this.props.setActivePortfolio}
                         portfolio={this.props.portfolio}
                         server_time={this.props.server_time}
+                        is_open={this.props.is_portfolio_selected}
                     />
                 </div>
             </div>

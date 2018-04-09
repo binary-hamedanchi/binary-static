@@ -89,7 +89,7 @@ export default class TradeStore {
             buy_price          : 5.6,
             contract_id        : 23674746528,
             contract_type      : 'CALL',
-            currency           : 'USD',
+            currency           : 'AUD',
             current_spot       : '82.070',
             current_spot_time  : 1522819056,
             date_expiry        : 1523491199,

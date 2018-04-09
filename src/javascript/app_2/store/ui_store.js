@@ -13,6 +13,8 @@ export default class UIStore {
         this.is_portfolio_selected = !this.is_portfolio_selected;
         if (toggleDrawer) {
             this.is_portfolio_drawer_on = false;
+            this.is_portfolio_selected = false;
+            this.selected_portfolio = {};
         }
     };
 
