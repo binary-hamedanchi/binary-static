@@ -1,6 +1,6 @@
 import React from 'react';
-import moment from 'moment';
 import { Currency } from '../currency.jsx';
+import { Time } from '../time.jsx';
 import { localize } from '../../../_common/localize';
 
 class PortfolioDrawer extends React.Component {
@@ -17,41 +17,32 @@ class PortfolioDrawer extends React.Component {
         this.setState({ is_open: !this.state.is_open });
     }
 
-    renderIndicativePrice = (contract) => {
-        const final_price       = contract.sell_price || contract.bid_price;
-        const user_sold         = contract.sell_time && contract.sell_time < contract.date_expiry;
-        const is_ended          = contract.is_settleable || contract.is_sold || user_sold;
-        const indicative_price  = final_price && is_ended ? final_price : (contract.bid_price || null);
+    renderIndicativePrice = ({ currency, sell_price, bid_price, sell_time, date_expiry, is_settleable, is_sold }) => {
+        const final_price = sell_price || bid_price;
+        const user_sold   = sell_time && sell_time < date_expiry;
+        const is_ended    = is_settleable || is_sold || user_sold;
 
-        return (
-            <span className={indicative_price > 0 ? 'profit' : 'loss'}>
-                <Currency currency={contract.currency} amount={indicative_price} />
-            </span>
-        );
+        const indicative_price = final_price && is_ended ? final_price : (bid_price || null);
+
+        return (<Currency currency={currency} amount={indicative_price} show_indicative />);
     };
 
     renderRemainingTime = (contract) => {
-        let time_left;
+        const { is_forward_starting, is_settleable, date_start, is_sold, current_spot_time, date_expiry } = contract;
 
-        const now = Math.max(Math.floor((this.props.server_time || 0) / 1000), contract.current_spot_time || 0);
+        const is_started = !is_forward_starting || current_spot_time > date_start;
+        const is_ended   = is_settleable || is_sold;
 
-        const is_started = !contract.is_forward_starting || contract.current_spot_time > contract.date_start;
-        const is_ended   = contract.is_settleable || contract.is_sold;
-        if ((!is_started || is_ended || now >= contract.date_expiry)) {
-            time_left = '-';
-        } else {
-            let remained = contract.date_expiry - now;
-            let days = 0;
-            const day_seconds = 24 * 60 * 60;
-            if (remained > day_seconds) {
-                days = Math.floor(remained / day_seconds);
-                remained %= day_seconds;
-            }
-            time_left = (days > 0 ? `${days} ${localize(days > 1 ? 'days' : 'day')}, ` : '') + moment((remained) * 1000).utc().format('HH:mm:ss');
-        }
+        const timer_options = {
+            t_start  : current_spot_time,
+            t_end    : date_expiry,
+            t_stopped: (!is_started || is_ended),
+        };
 
         return (
-            <span className='remaining-time'>{time_left}</span>
+            <span className='remaining-time'>
+                <Time timer={timer_options} />
+            </span>
         );
     };
 

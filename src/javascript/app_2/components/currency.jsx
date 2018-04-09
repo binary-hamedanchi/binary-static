@@ -15,10 +15,25 @@ export const addComma = (num, decimal_points, is_crypto) => {
     ));
 };
 
-export const Currency = ({ currency, amount, decimals = 0, minimumFractionDigits = 0 }) => {
+const Money = ({ sign, currency, money }) => (
+    <React.Fragment>
+        { sign }
+        { currency && <span className={`symbols ${(currency || '').toLowerCase()}`}/> }
+        { money }
+    </React.Fragment>
+);
+
+export const Currency = ({
+    currency,
+    amount,
+    decimals = 0,
+    minimumFractionDigits = 0,
+    show_indicative,
+    percentage,
+}) => {
     let money = amount;
     if (money) money = String(money).replace(/,/g, '');
-    const sign           = money && Number(money) < 0 ? '-' : '';
+    const sign  = money && Number(money) < 0 ? '-' : '';
     const decimal_places = decimals || '2'; // getDecimalPlaces(currency);
 
     money = isNaN(money) ? 0 : Math.abs(money);
@@ -33,10 +48,12 @@ export const Currency = ({ currency, amount, decimals = 0, minimumFractionDigits
     }
 
     return (
-        <React.Fragment>
-            { sign }
-            { currency && <span className={`symbols ${(currency || '').toLowerCase()}`}/> }
-            { money }
-        </React.Fragment>
+        show_indicative ?
+            <span className={money >= 0 ? 'profit' : 'loss'}>
+                <Money sign={sign} currency={currency} money={money} />
+                { percentage && <span className='percent'> ({percentage > 0 ? '+' : ''}{percentage}%)</span> }
+            </span>
+            :
+            <Money sign={sign} currency={currency} money={money} />
     );
 };

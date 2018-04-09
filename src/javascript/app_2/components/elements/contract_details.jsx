@@ -1,7 +1,7 @@
 import React from 'react';
-import moment from 'moment';
 import Button from '../form/button.jsx';
 import { Currency, addComma } from '../currency.jsx';
+import { Time } from '../time.jsx';
 import { localize } from '../../../_common/localize';
 
 class ContractDetailsTable extends React.PureComponent {
@@ -125,102 +125,98 @@ class ContractDetails extends React.PureComponent {
         });
     }
 
-    /*
-        TODO: Format data
-     */
-    // Format contract details data
-    formatContractDetails = (contract) => {
-        const final_price       = contract.sell_price || contract.bid_price;
-        const user_sold         = contract.sell_time && contract.sell_time < contract.date_expiry;
-        const is_ended          = contract.is_settleable || contract.is_sold || user_sold;
-        const indicative_price  = final_price && is_ended ? final_price : (contract.bid_price || null);
-        const is_started        = !contract.is_forward_starting || contract.current_spot_time > contract.date_start;
-        // const sold_before_start = contract.sell_time && contract.sell_time < contract.date_start;
+    renderTransactionIDs = (ids) => (
+        <React.Fragment>
+            {ids.buy  ? `${ids.buy} (${localize('Buy')})` : ''}
+            {ids.sell ? `${ids.sell} (${localize('Sell')})` : ''}
+        </React.Fragment>
+    );
 
-        const getContractPurchaseReference = () => (
+    renderContractPurchaseRefs = (id) => (
+        <React.Fragment>
+            {localize('Your transaction reference is')}&nbsp;
+            <span className='link'>{id}</span>
+        </React.Fragment>
+    );
+
+    renderProfitLoss = ({ currency, sell_price, buy_price, bid_price }) => {
+        const final_price = sell_price || bid_price;
+        let profit_loss,
+            percentage;
+
+        if (final_price) {
+            profit_loss = final_price - buy_price;
+            percentage  = addComma((profit_loss * 100) / buy_price, 2);
+        }
+
+        return (
             <React.Fragment>
-                {localize('Your transaction reference is')}&nbsp;
-                <span className='link'>{contract.transaction_id}</span>
-            </React.Fragment>
-        );
-
-        const getTransactionIDs = (ids) => (
-            <React.Fragment>
-                {ids.buy  ? `${ids.buy} (${localize('Buy')})` : ''}
-                {ids.sell ? `${ids.sell} (${localize('Sell')})` : ''}
-            </React.Fragment>
-        );
-
-        const getRemainingTime = () => {
-            let time_left;
-
-            const now = Math.max(Math.floor((window.time || 0) / 1000), contract.current_spot_time || 0);
-
-            // const is_started = !contract.is_forward_starting || contract.current_spot_time > contract.date_start;
-            // const is_ended   = contract.is_settleable || contract.is_sold;
-            if ((!is_started || is_ended || now >= contract.date_expiry)) {
-                time_left = '-';
-            } else {
-                let remained = contract.date_expiry - now;
-                let days = 0;
-                const day_seconds = 24 * 60 * 60;
-                if (remained > day_seconds) {
-                    days = Math.floor(remained / day_seconds);
-                    remained %= day_seconds;
+                {
+                    final_price ?
+                        <Currency currency={currency} amount={profit_loss} percentage={percentage} show_indicative />
+                        :
+                        <span className='loss'>-</span>
                 }
-                time_left = (days > 0 ? `${days} ${localize(days > 1 ? 'days' : 'day')}, ` : '') + moment((remained) * 1000).utc().format('HH:mm:ss');
-            }
-            return time_left;
-        };
+            </React.Fragment>
+        );
+    };
 
-        const epochToDateTime = epoch => (`${moment.utc(epoch * 1000).format('YYYY-MM-DD HH:mm:ss')} GMT`);
+    renderIndicativePrice = ({ currency, sell_price, bid_price, sell_time, date_expiry, is_settleable, is_sold }) => {
+        const final_price = sell_price || bid_price;
+        const user_sold   = sell_time && sell_time < date_expiry;
+        const is_ended    = is_settleable || is_sold || user_sold;
 
-        const displayCurrentTime = (time) => moment(time || undefined).utc().format('YYYY-MM-DD HH:mm:ss [GMT]');
+        const indicative_price = final_price && is_ended ? final_price : (bid_price || null);
 
-        const getIndicativePrice = () => indicative_price ? <Currency currency={contract.currency} amount={contract.buy_price} /> : '-';
+        return (<Currency currency={currency} amount={indicative_price} show_indicative />);
+    };
 
-        const getProfitLoss = () => {
-            let profit_loss,
-                percentage;
+    formatContractDetails = (contract) => {
+        const {
+            is_forward_starting,
+            is_settleable,
+            is_sold,
+            transaction_ids,
+            transaction_id,
+            contract_id,
+            date_start,
+            date_expiry,
+            current_spot,
+            entry_spot,
+            barrier,
+            buy_price,
+            currency,
+            payout,
+            current_spot_time,
+            longcode,
+        } = contract;
 
-            if (final_price) {
-                profit_loss = final_price - contract.buy_price;
-                percentage  = addComma((profit_loss * 100) / contract.buy_price, 2);
-            }
-
-            return (
-                <React.Fragment>
-                    {
-                        final_price ?
-                            <span className={profit_loss >= 0? 'profit' : 'loss'}>
-                                <Currency currency={contract.currency} amount={profit_loss} />
-                                &nbsp;<span className='percent'>({ percentage > 0 ? '+' : '' }{percentage}%)</span>
-                            </span>
-                            :
-                            <span className='loss'>-</span>
-                    }
-                </React.Fragment>
-            );
+        const is_started    = !is_forward_starting || current_spot_time > date_start;
+        const is_ended      = is_settleable || is_sold;
+        const timer_options = {
+            t_start  : current_spot_time,
+            t_end    : date_expiry,
+            t_stopped: (!is_started || is_ended),
         };
 
         return {
             trade_details_contract_type    : '',
-            trade_details_contract_id      : contract.contract_id,
-            trade_details_ref_id           : getTransactionIDs(contract.transaction_ids || {}),
-            trade_details_remaining_time   : getRemainingTime(),
-            trade_details_start_date       : epochToDateTime(contract.date_start),
-            trade_details_end_date         : epochToDateTime(contract.date_expiry),
-            trade_details_entry_spot       : contract.entry_spot,
-            trade_details_barrier          : contract.barrier,
-            trade_details_purchase_price   : <Currency currency={contract.currency} amount={contract.buy_price} />,
-            trade_details_potential_payout : <Currency currency={contract.currency} amount={contract.payout} />,
-            trade_details_current_spot     : contract.current_spot,
-            trade_details_current_spot_time: epochToDateTime(contract.current_spot_time),
-            trade_details_indicative_price : getIndicativePrice(),
-            trade_details_profit_loss      : getProfitLoss(),
-            trade_details_current_time     : displayCurrentTime(this.props.server_time),
-            contract_purchase_desc         : contract.longcode,
-            contract_purchase_reference    : getContractPurchaseReference(),
+            trade_details_contract_id      : contract_id,
+            trade_details_ref_id           : this.renderTransactionIDs(transaction_ids || {}),
+            trade_details_remaining_time   : <Time timer={timer_options} />,
+            trade_details_start_date       : <Time epoch={date_start} />,
+            trade_details_end_date         : <Time epoch={date_expiry} />,
+            trade_details_entry_spot       : entry_spot,
+            trade_details_barrier          : barrier,
+            trade_details_purchase_price   : <Currency currency={currency} amount={buy_price} />,
+            trade_details_potential_payout : <Currency currency={currency} amount={payout} />,
+            trade_details_current_spot     : current_spot,
+            trade_details_current_spot_time: <Time epoch={current_spot_time} />,
+            trade_details_indicative_price : this.renderIndicativePrice(contract),
+            trade_details_profit_loss      : this.renderProfitLoss(contract),
+            trade_details_current_time     : <Time time={this.props.server_time} />,
+            contract_purchase_desc         : longcode,
+            contract_purchase_reference    : this.renderContractPurchaseRefs(transaction_id),
             contract_purchase_payout       : '',
             contract_purchase_cost         : '',
             contract_purchase_profit       : '',

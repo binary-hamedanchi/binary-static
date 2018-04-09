@@ -81,31 +81,6 @@ export default class TradeStore {
 
     // TODO: to remove dummy portfolio value
     @observable portfolio = [
-        {
-            transaction_id: 32355620467,
-            contract_id   : 478981052055,
-            payout        : 10,
-            expiry_time   : 1522886399,
-            longcode      : 'Win payout if AUD/JPY is strictly higher than entry spot at close on 2018-04-04.',
-            shortcode     : 'CALL_FRXAUDJPY_10_1520263325_1522886399_S0P_0',
-            currency      : 'USD',
-            buy_price     : 1.06,
-            app_id        : 1,
-            symbol        : 'AUD/JPY',
-        },
-        {
-            transaction_id: 47272620508,
-            contract_id   : 432523746528,
-            payout        : 10,
-            expiry_time   : 15234686345,
-            longcode      : 'Win payout if AUD/JPY is strictly higher than entry spot at close on 2018-05-04.',
-            shortcode     : 'CALL_FRXAUDJPY_10_1520263325_1522886399_S0P_0',
-            currency      : 'USD',
-            buy_price     : -55.25,
-            is_sold       : false,
-            app_id        : 1,
-            symbol        : 'Australian Index',
-        },
         // proposal open contract
         {
             barrier            : '81.811',
@@ -117,8 +92,8 @@ export default class TradeStore {
             currency           : 'USD',
             current_spot       : '82.070',
             current_spot_time  : 1522819056,
-            date_expiry        : 1523059199,
-            date_settlement    : 1523059199,
+            date_expiry        : 1523491199,
+            date_settlement    : 1523491199,
             date_start         : 1520263325,
             display_name       : 'AUD/JPY',
             symbol             : 'AUD/JPY',
