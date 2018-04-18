@@ -301,7 +301,6 @@ class TimePicker extends PureComponent {
                     ? <input
                         type='time'
                         id={`${prefix_class}-input`}
-                        className={`${prefix_class}-input`}
                         value={formatted_value}
                         onChange={this.handleChange}
                         name={name}
