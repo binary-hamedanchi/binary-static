@@ -15147,7 +15147,7 @@ var DigitDisplay = function DigitDisplay(_ref) {
 
     return _react2.default.createElement(
         'div',
-        { className: 'digit-info', key: digit_number },
+        { className: 'digit-info' },
         _react2.default.createElement(
             'div',
             { className: digit_class },
@@ -18907,7 +18907,7 @@ var LastDigit = function LastDigit(_ref) {
         },
         _react2.default.createElement(_dropdown2.default, {
             list: last_digit_numbers,
-            value: last_digit,
+            value: +last_digit,
             name: 'last_digit',
             onChange: onChange,
             is_nativepicker: is_nativepicker
@@ -18918,7 +18918,7 @@ var LastDigit = function LastDigit(_ref) {
 LastDigit.propTypes = {
     is_minimized: _propTypes2.default.bool,
     is_nativepicker: _propTypes2.default.bool,
-    last_digit: _propTypes2.default.number,
+    last_digit: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
     onChange: _propTypes2.default.func
 };
 
@@ -23152,7 +23152,6 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
                 (0, _purchase.processPurchase)(proposal_id, price).then((0, _mobx.action)(function (response) {
                     _Services.WS.forgetAll('proposal');
                     _this3.purchase_info = response;
-                    // this.purchase_info = { buy: { contract_id: '30847732248' }};
                 }));
             }
         }
@@ -23209,7 +23208,7 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
                                 new_state = this.updateStore((0, _utility.cloneObject)(obj_new_values));
 
                                 if (!(is_changed_by_user || /\b(symbol|contract_types_list)\b/.test(Object.keys(new_state)))) {
-                                    _context2.next = 14;
+                                    _context2.next = 13;
                                     break;
                                 }
 
@@ -23245,17 +23244,11 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
                                 snapshot = _context2.sent;
 
                                 snapshot.is_trade_enabled = true;
-
-                                if (!this.is_params_applied) {
-                                    // update snapshot by query string values
-                                    this.is_params_applied = true;
-                                }
-
                                 this.updateStore(snapshot);
 
                                 this.requestProposal();
 
-                            case 14:
+                            case 13:
                             case 'end':
                                 return _context2.stop();
                         }
