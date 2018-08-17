@@ -3173,7 +3173,6 @@ a {
                 align-items: center; }
         .settings-dialog .settings-dialog-container .general-setting-container .settings-row span, .settings-dialog .settings-dialog-container .chart-setting-container .settings-row span {
           font-size: 12px;
-          text-transform: capitalize;
           color: #333; }
         .settings-dialog .settings-dialog-container .general-setting-container .settings-row:not(:last-child), .settings-dialog .settings-dialog-container .chart-setting-container .settings-row:not(:last-child) {
           border-bottom: 1px solid #e9e9ed; }

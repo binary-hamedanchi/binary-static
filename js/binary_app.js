@@ -12610,6 +12610,8 @@ var _Drawer = __webpack_require__(133);
 
 var _menu_drawer = __webpack_require__(497);
 
+var _menu_drawer2 = _interopRequireDefault(_menu_drawer);
+
 var _NavBar = __webpack_require__(74);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -12623,7 +12625,7 @@ var ToggleMenuDrawer = function ToggleMenuDrawer() {
             icon_class: 'menu-toggle'
         },
         _react2.default.createElement(_account_switcher2.default, null),
-        _react2.default.createElement(_menu_drawer.MenuDrawer, null)
+        _react2.default.createElement(_menu_drawer2.default, null)
     );
 };
 
@@ -12872,15 +12874,14 @@ exports.default = header_links;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.MenuDrawer = undefined;
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
 
 var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
 
 var _Drawer = __webpack_require__(133);
 
@@ -12888,15 +12889,19 @@ var _Drawer2 = __webpack_require__(519);
 
 var _NavBar = __webpack_require__(74);
 
+var _routes = __webpack_require__(137);
+
+var _routes2 = _interopRequireDefault(_routes);
+
 var _Services = __webpack_require__(58);
+
+var _connect = __webpack_require__(20);
 
 var _client_base = __webpack_require__(24);
 
 var _client_base2 = _interopRequireDefault(_client_base);
 
 var _localize = __webpack_require__(2);
-
-var _connect = __webpack_require__(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12922,19 +12927,24 @@ var MenuDrawer = function MenuDrawer(_ref) {
                 _react2.default.createElement(_Drawer.DrawerItem, {
                     text: (0, _localize.localize)('Trade'),
                     icon: _react2.default.createElement(_NavBar.IconTrade, { className: 'drawer-icon' }),
-                    link_to: '/trade'
+                    link_to: _routes2.default.trade
                 }),
                 _react2.default.createElement(_Drawer.DrawerItem, {
                     text: (0, _localize.localize)('Portfolio'),
                     icon: _react2.default.createElement(_NavBar.IconPortfolio, { className: 'drawer-icon' }),
-                    link_to: '/portfolio'
+                    link_to: _routes2.default.portfolio
                 }),
                 _react2.default.createElement(_Drawer.DrawerItem, {
                     text: (0, _localize.localize)('Statement'),
                     icon: _react2.default.createElement(_NavBar.IconStatement, { className: 'drawer-icon' }),
-                    link_to: '/statement'
+                    link_to: _routes2.default.statement
                 }),
                 _react2.default.createElement('hr', null),
+                _react2.default.createElement(_Drawer.DrawerToggle, {
+                    text: (0, _localize.localize)('Dark Mode'),
+                    toggle: toggleDarkMode,
+                    to_toggle: is_dark_mode
+                }),
                 _react2.default.createElement(_Drawer.DrawerToggle, {
                     text: (0, _localize.localize)('Purchase Confirmation'),
                     toggle: togglePurchaseConfirmation,
@@ -12944,11 +12954,6 @@ var MenuDrawer = function MenuDrawer(_ref) {
                     text: (0, _localize.localize)('Purchase Lock'),
                     toggle: togglePurchaseLock,
                     to_toggle: is_purchase_locked
-                }),
-                _react2.default.createElement(_Drawer.DrawerToggle, {
-                    text: (0, _localize.localize)('Dark Theme'),
-                    toggle: toggleDarkMode,
-                    to_toggle: is_dark_mode
                 })
             )
         ),
@@ -12981,7 +12986,7 @@ MenuDrawer.propTypes = {
     is_mobile: _propTypes2.default.bool
 };
 
-var menu_drawer_component = (0, _connect.connect)(function (_ref2) {
+exports.default = (0, _connect.connect)(function (_ref2) {
     var ui = _ref2.ui;
     return {
         is_dark_mode: ui.is_dark_mode_on,
@@ -12995,8 +13000,6 @@ var menu_drawer_component = (0, _connect.connect)(function (_ref2) {
         is_mobile: ui.is_mobile
     };
 })(MenuDrawer);
-
-exports.MenuDrawer = menu_drawer_component;
 
 /***/ }),
 /* 498 */
@@ -13423,18 +13426,18 @@ var ChartSettings = function ChartSettings(_ref) {
             'div',
             { className: 'chart-setting-container' },
             _react2.default.createElement(_settings_control2.default, {
-                name: 'position',
+                name: 'Position',
                 toggle: toggleLayout,
                 to_toggle: !is_layout_default,
                 style: 'toggle-chart-layout'
             }),
             _react2.default.createElement(_settings_control2.default, {
-                name: 'asset information',
+                name: 'Asset Information',
                 toggle: toggleAsset,
                 to_toggle: is_asset_visible
             }),
             _react2.default.createElement(_settings_control2.default, {
-                name: 'scale countdown',
+                name: 'Scale Countdown',
                 toggle: toggleCountdown,
                 to_toggle: is_countdown_visible
             })
@@ -13508,23 +13511,23 @@ var GeneralSettings = function GeneralSettings(_ref) {
             _react2.default.createElement(
                 _settings_control2.default,
                 {
-                    name: 'language',
+                    name: 'Language',
                     onClick: showLanguage
                 },
                 _react2.default.createElement('i', { className: 'flag ic-flag-' + (curr_language || 'EN').toLowerCase() })
             ),
             _react2.default.createElement(_settings_control2.default, {
-                name: 'dark mode',
+                name: 'Dark Mode',
                 to_toggle: is_dark_mode,
                 toggle: toggleDarkMode
             }),
             _react2.default.createElement(_settings_control2.default, {
-                name: 'purchase confirmation',
+                name: 'Purchase Confirmation',
                 to_toggle: is_purchase_confirmed,
                 toggle: togglePurchaseConfirmation
             }),
             _react2.default.createElement(_settings_control2.default, {
-                name: 'purchase lock',
+                name: 'Purchase Lock',
                 to_toggle: is_purchase_locked,
                 toggle: togglePurchaseLock
             })
@@ -19761,7 +19764,12 @@ var Trade = function (_React$Component) {
     _createClass(Trade, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            this.props.updateQueryString();
+            this.props.onMount();
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            this.props.onUnmount();
         }
     }, {
         key: 'render',
@@ -19794,11 +19802,12 @@ Trade.propTypes = {
     is_contract_mode: _propTypes2.default.bool,
     is_mobile: _propTypes2.default.bool,
     is_trade_enabled: _propTypes2.default.bool,
-    onSymbolChange: _propTypes2.default.func,
     onClickNewTrade: _propTypes2.default.func,
+    onMount: _propTypes2.default.func,
+    onSymbolChange: _propTypes2.default.func,
+    onUnmount: _propTypes2.default.func,
     purchase_info: _propTypes2.default.object,
-    symbol: _propTypes2.default.string,
-    updateQueryString: _propTypes2.default.func
+    symbol: _propTypes2.default.string
 };
 
 exports.default = (0, _connect.connect)(function (_ref) {
@@ -19806,13 +19815,14 @@ exports.default = (0, _connect.connect)(function (_ref) {
         ui = _ref.ui;
     return {
         is_contract_mode: modules.smart_chart.is_contract_mode,
+        is_mobile: ui.is_mobile,
         is_trade_enabled: modules.trade.is_trade_enabled,
         onClickNewTrade: modules.trade.onClickNewTrade,
+        onMount: modules.trade.onMount,
         onSymbolChange: modules.trade.onChange,
+        onUnmount: modules.trade.onUnmount,
         purchase_info: modules.trade.purchase_info,
-        symbol: modules.trade.symbol,
-        updateQueryString: modules.trade.updateQueryString,
-        is_mobile: ui.is_mobile
+        symbol: modules.trade.symbol
     };
 })(Trade);
 
@@ -21001,16 +21011,17 @@ var getDetailsExpiry = exports.getDetailsExpiry = function getDetailsExpiry(stor
 
     if (!store.is_ended) return {};
 
-    var _store$contract_info = store.contract_info,
-        end_spot = _store$contract_info.end_spot,
-        end_spot_time = _store$contract_info.end_spot_time,
-        date_expiry = _store$contract_info.date_expiry;
+    var contract_info = store.contract_info,
+        end_spot = store.end_spot,
+        end_spot_time = store.end_spot_time,
+        indicative_price = store.indicative_price,
+        is_user_sold = store.is_user_sold;
 
     // TODO: don't localize on every call
     // for user sold contracts sell spot can get updated when the next tick becomes available
     // so we only show end time instead of any spot information
 
-    return _extends({}, store.is_user_sold ? _defineProperty({}, (0, _localize.localize)('End Time'), date_expiry && (0, _Date.toGMTFormat)(+date_expiry * 1000)) : (_ref3 = {}, _defineProperty(_ref3, (0, _localize.localize)('Exit Spot'), end_spot ? (0, _currency_base.addComma)(end_spot) : '-'), _defineProperty(_ref3, (0, _localize.localize)('Exit Spot Time'), end_spot_time ? (0, _Date.toGMTFormat)(+end_spot_time * 1000) : '-'), _ref3), _defineProperty({}, (0, _localize.localize)('Payout'), _react2.default.createElement(_money2.default, { amount: store.indicative_price, currency: 'USD' })));
+    return _extends({}, is_user_sold ? _defineProperty({}, (0, _localize.localize)('End Time'), contract_info.date_expiry && (0, _Date.toGMTFormat)(+contract_info.date_expiry * 1000)) : (_ref3 = {}, _defineProperty(_ref3, (0, _localize.localize)('Exit Spot'), end_spot ? (0, _currency_base.addComma)(end_spot) : '-'), _defineProperty(_ref3, (0, _localize.localize)('Exit Spot Time'), end_spot_time ? (0, _Date.toGMTFormat)(+end_spot_time * 1000) : '-'), _ref3), _defineProperty({}, (0, _localize.localize)('Payout'), _react2.default.createElement(_money2.default, { amount: indicative_price, currency: 'USD' })));
 };
 
 /***/ }),
@@ -21139,11 +21150,9 @@ var ContractStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec
             this.forgetProposalOpenContract();
 
             this.contract_id = null;
-
             this.contract_info = {};
             this.digits_info = {};
             this.sell_info = {};
-
             this.is_sell_requested = false;
 
             this.smart_chart.removeBarriers();
@@ -23105,7 +23114,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15, _descriptor16, _descriptor17, _descriptor18, _descriptor19, _descriptor20, _descriptor21, _descriptor22, _descriptor23, _descriptor24, _descriptor25, _descriptor26, _descriptor27, _descriptor28, _descriptor29, _descriptor30, _descriptor31;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15, _descriptor16, _descriptor17, _descriptor18, _descriptor19, _descriptor20, _descriptor21, _descriptor22, _descriptor23, _descriptor24, _descriptor25, _descriptor26, _descriptor27, _descriptor28, _descriptor29, _descriptor30, _descriptor31, _descriptor32;
 
 var _mobx = __webpack_require__(28);
 
@@ -23210,7 +23219,7 @@ function _initializerWarningHelper(descriptor, context) {
     throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 = _mobx.action.bound, _dec4 = _mobx.action.bound, _dec5 = _mobx.action.bound, _dec6 = _mobx.action.bound, _dec7 = _mobx.action.bound, _dec8 = _mobx.action.bound, _dec9 = _mobx.action.bound, _dec10 = _mobx.action.bound, _dec11 = _mobx.action.bound, (_class = function (_BaseStore) {
+var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 = _mobx.action.bound, _dec4 = _mobx.action.bound, _dec5 = _mobx.action.bound, _dec6 = _mobx.action.bound, _dec7 = _mobx.action.bound, _dec8 = _mobx.action.bound, _dec9 = _mobx.action.bound, _dec10 = _mobx.action.bound, _dec11 = _mobx.action.bound, _dec12 = _mobx.action.bound, _dec13 = _mobx.action.bound, (_class = function (_BaseStore) {
     _inherits(TradeStore, _BaseStore);
 
     // Purchase
@@ -23238,70 +23247,78 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
 
         var _this = _possibleConstructorReturn(this, (TradeStore.__proto__ || Object.getPrototypeOf(TradeStore)).call(this, options));
 
-        _initDefineProp(_this, 'is_purchase_enabled', _descriptor, _this);
+        _initDefineProp(_this, 'is_trade_component_mounted', _descriptor, _this);
 
-        _initDefineProp(_this, 'is_trade_enabled', _descriptor2, _this);
+        _initDefineProp(_this, 'is_purchase_enabled', _descriptor2, _this);
 
-        _initDefineProp(_this, 'symbol', _descriptor3, _this);
+        _initDefineProp(_this, 'is_trade_enabled', _descriptor3, _this);
 
-        _initDefineProp(_this, 'contract_expiry_type', _descriptor4, _this);
+        _initDefineProp(_this, 'symbol', _descriptor4, _this);
 
-        _initDefineProp(_this, 'contract_start_type', _descriptor5, _this);
+        _initDefineProp(_this, 'contract_expiry_type', _descriptor5, _this);
 
-        _initDefineProp(_this, 'contract_type', _descriptor6, _this);
+        _initDefineProp(_this, 'contract_start_type', _descriptor6, _this);
 
-        _initDefineProp(_this, 'contract_types_list', _descriptor7, _this);
+        _initDefineProp(_this, 'contract_type', _descriptor7, _this);
 
-        _initDefineProp(_this, 'form_components', _descriptor8, _this);
+        _initDefineProp(_this, 'contract_types_list', _descriptor8, _this);
 
-        _initDefineProp(_this, 'trade_types', _descriptor9, _this);
+        _initDefineProp(_this, 'form_components', _descriptor9, _this);
 
-        _initDefineProp(_this, 'amount', _descriptor10, _this);
+        _initDefineProp(_this, 'trade_types', _descriptor10, _this);
 
-        _initDefineProp(_this, 'basis', _descriptor11, _this);
+        _initDefineProp(_this, 'amount', _descriptor11, _this);
 
-        _initDefineProp(_this, 'basis_list', _descriptor12, _this);
+        _initDefineProp(_this, 'basis', _descriptor12, _this);
 
-        _initDefineProp(_this, 'currencies_list', _descriptor13, _this);
+        _initDefineProp(_this, 'basis_list', _descriptor13, _this);
 
-        _initDefineProp(_this, 'currency', _descriptor14, _this);
+        _initDefineProp(_this, 'currencies_list', _descriptor14, _this);
 
-        _initDefineProp(_this, 'duration', _descriptor15, _this);
+        _initDefineProp(_this, 'currency', _descriptor15, _this);
 
-        _initDefineProp(_this, 'duration_unit', _descriptor16, _this);
+        _initDefineProp(_this, 'duration', _descriptor16, _this);
 
-        _initDefineProp(_this, 'duration_units_list', _descriptor17, _this);
+        _initDefineProp(_this, 'duration_unit', _descriptor17, _this);
 
-        _initDefineProp(_this, 'duration_min_max', _descriptor18, _this);
+        _initDefineProp(_this, 'duration_units_list', _descriptor18, _this);
 
-        _initDefineProp(_this, 'expiry_date', _descriptor19, _this);
+        _initDefineProp(_this, 'duration_min_max', _descriptor19, _this);
 
-        _initDefineProp(_this, 'expiry_time', _descriptor20, _this);
+        _initDefineProp(_this, 'expiry_date', _descriptor20, _this);
 
-        _initDefineProp(_this, 'expiry_type', _descriptor21, _this);
+        _initDefineProp(_this, 'expiry_time', _descriptor21, _this);
 
-        _initDefineProp(_this, 'barrier_1', _descriptor22, _this);
+        _initDefineProp(_this, 'expiry_type', _descriptor22, _this);
 
-        _initDefineProp(_this, 'barrier_2', _descriptor23, _this);
+        _initDefineProp(_this, 'barrier_1', _descriptor23, _this);
 
-        _initDefineProp(_this, 'barrier_count', _descriptor24, _this);
+        _initDefineProp(_this, 'barrier_2', _descriptor24, _this);
 
-        _initDefineProp(_this, 'start_date', _descriptor25, _this);
+        _initDefineProp(_this, 'barrier_count', _descriptor25, _this);
 
-        _initDefineProp(_this, 'start_dates_list', _descriptor26, _this);
+        _initDefineProp(_this, 'start_date', _descriptor26, _this);
 
-        _initDefineProp(_this, 'start_time', _descriptor27, _this);
+        _initDefineProp(_this, 'start_dates_list', _descriptor27, _this);
 
-        _initDefineProp(_this, 'sessions', _descriptor28, _this);
+        _initDefineProp(_this, 'start_time', _descriptor28, _this);
 
-        _initDefineProp(_this, 'last_digit', _descriptor29, _this);
+        _initDefineProp(_this, 'sessions', _descriptor29, _this);
 
-        _initDefineProp(_this, 'proposal_info', _descriptor30, _this);
+        _initDefineProp(_this, 'last_digit', _descriptor30, _this);
 
-        _initDefineProp(_this, 'purchase_info', _descriptor31, _this);
+        _initDefineProp(_this, 'proposal_info', _descriptor31, _this);
+
+        _initDefineProp(_this, 'purchase_info', _descriptor32, _this);
 
         _this.proposal_requests = {};
 
+
+        Object.defineProperty(_this, 'is_query_string_applied', {
+            enumerable: false,
+            value: false,
+            writable: true
+        });
 
         if (_client_base2.default.isLoggedIn) {
             _this.processNewValuesAsync({ currency: _client_base2.default.get('currency') });
@@ -23334,35 +23351,39 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
                 var _this2 = this;
 
-                var active_symbols;
+                var query_string_values, active_symbols;
                 return regeneratorRuntime.wrap(function _callee$(_context) {
                     while (1) {
                         switch (_context.prev = _context.next) {
                             case 0:
+                                query_string_values = this.updateQueryString();
+
                                 this.smart_chart = this.root_store.modules.smart_chart;
 
                                 if (this.symbol) {
-                                    _context.next = 7;
+                                    _context.next = 8;
                                     break;
                                 }
 
-                                _context.next = 4;
+                                _context.next = 5;
                                 return _Services.WS.activeSymbols();
 
-                            case 4:
+                            case 5:
                                 active_symbols = _context.sent;
-                                _context.next = 7;
-                                return this.processNewValuesAsync({ symbol: (0, _symbol2.pickDefaultSymbol)(active_symbols.active_symbols) });
+                                _context.next = 8;
+                                return this.processNewValuesAsync(_extends({
+                                    symbol: (0, _symbol2.pickDefaultSymbol)(active_symbols.active_symbols)
+                                }, query_string_values));
 
-                            case 7:
+                            case 8:
 
                                 if (this.symbol) {
                                     _contract_type2.default.buildContractTypesConfig(this.symbol).then((0, _mobx.action)(function () {
-                                        _this2.processNewValuesAsync(_extends({}, _contract_type2.default.getContractValues(_this2), _contract_type2.default.getContractCategories()));
+                                        _this2.processNewValuesAsync(_extends({}, _contract_type2.default.getContractValues(_this2), _contract_type2.default.getContractCategories(), query_string_values));
                                     }));
                                 }
 
-                            case 8:
+                            case 9:
                             case 'end':
                                 return _context.stop();
                         }
@@ -23436,7 +23457,7 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
                     }
 
                     // Add changes to queryString of the url
-                    if (_query_string.allowed_query_string_variables.indexOf(key) !== -1) {
+                    if (_query_string.allowed_query_string_variables.indexOf(key) !== -1 && _this4.is_trade_component_mounted) {
                         _url_helper2.default.setQueryParam(_defineProperty({}, key, new_state[key]));
                     }
 
@@ -23452,7 +23473,7 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
             var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
                 var obj_new_values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
                 var is_changed_by_user = arguments[1];
-                var new_state, is_barrier_changed, snapshot;
+                var new_state, is_barrier_changed, snapshot, query_string_values;
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
@@ -23460,7 +23481,7 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
                                 new_state = this.updateStore((0, _utility.cloneObject)(obj_new_values));
 
                                 if (!(is_changed_by_user || /\b(symbol|contract_types_list)\b/.test(Object.keys(new_state)))) {
-                                    _context2.next = 13;
+                                    _context2.next = 15;
                                     break;
                                 }
 
@@ -23494,13 +23515,17 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
 
                             case 9:
                                 snapshot = _context2.sent;
+                                query_string_values = this.is_query_string_applied ? {} : this.updateQueryString();
 
                                 snapshot.is_trade_enabled = true;
-                                this.updateStore(snapshot);
+
+                                this.updateStore(_extends({}, snapshot, query_string_values));
+
+                                this.is_query_string_applied = true;
 
                                 this.requestProposal();
 
-                            case 13:
+                            case 15:
                             case 'end':
                                 return _context2.stop();
                         }
@@ -23552,15 +23577,16 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
     }, {
         key: 'updateQueryString',
         value: function updateQueryString() {
+
             // Update the url's query string by default values of the store
-            var queryParams = _url_helper2.default.updateQueryString(this, _query_string.allowed_query_string_variables);
+            var query_params = _url_helper2.default.updateQueryString(this, _query_string.allowed_query_string_variables, this.is_trade_component_mounted);
 
             // update state values from query string
             var config = {};
-            [].concat(_toConsumableArray(queryParams)).forEach(function (param) {
+            [].concat(_toConsumableArray(query_params)).forEach(function (param) {
                 return config[param[0]] = param[1];
             });
-            this.processNewValuesAsync(config);
+            return config;
         }
     }, {
         key: 'changeDurationValidationRules',
@@ -23583,163 +23609,179 @@ var TradeStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec3 =
                 this.validateProperty('duration', this.duration);
             }
         }
+    }, {
+        key: 'onMount',
+        value: function onMount() {
+            this.is_trade_component_mounted = true;
+            this.updateQueryString();
+        }
+    }, {
+        key: 'onUnmount',
+        value: function onUnmount() {
+            this.is_trade_component_mounted = false;
+        }
     }]);
 
     return TradeStore;
-}(_base_store2.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'is_purchase_enabled', [_mobx.observable], {
+}(_base_store2.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'is_trade_component_mounted', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return false;
     }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'is_trade_enabled', [_mobx.observable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'is_purchase_enabled', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return false;
     }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'symbol', [_mobx.observable], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'is_trade_enabled', [_mobx.observable], {
+    enumerable: true,
+    initializer: function initializer() {
+        return false;
+    }
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'symbol', [_mobx.observable], {
     enumerable: true,
     initializer: null
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'contract_expiry_type', [_mobx.observable], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'contract_expiry_type', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '';
     }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'contract_start_type', [_mobx.observable], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'contract_start_type', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '';
     }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'contract_type', [_mobx.observable], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'contract_type', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '';
     }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'contract_types_list', [_mobx.observable], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'contract_types_list', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return {};
     }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'form_components', [_mobx.observable], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'form_components', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return [];
     }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'trade_types', [_mobx.observable], {
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, 'trade_types', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return {};
     }
-}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, 'amount', [_mobx.observable], {
+}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, 'amount', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return 10;
     }
-}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, 'basis', [_mobx.observable], {
+}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, 'basis', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '';
     }
-}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, 'basis_list', [_mobx.observable], {
+}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, 'basis_list', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return [];
     }
-}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, 'currencies_list', [_mobx.observable], {
+}), _descriptor14 = _applyDecoratedDescriptor(_class.prototype, 'currencies_list', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return {};
     }
-}), _descriptor14 = _applyDecoratedDescriptor(_class.prototype, 'currency', [_mobx.observable], {
+}), _descriptor15 = _applyDecoratedDescriptor(_class.prototype, 'currency', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return _client_base2.default.get('currency');
     }
-}), _descriptor15 = _applyDecoratedDescriptor(_class.prototype, 'duration', [_mobx.observable], {
+}), _descriptor16 = _applyDecoratedDescriptor(_class.prototype, 'duration', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return 5;
     }
-}), _descriptor16 = _applyDecoratedDescriptor(_class.prototype, 'duration_unit', [_mobx.observable], {
+}), _descriptor17 = _applyDecoratedDescriptor(_class.prototype, 'duration_unit', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '';
     }
-}), _descriptor17 = _applyDecoratedDescriptor(_class.prototype, 'duration_units_list', [_mobx.observable], {
+}), _descriptor18 = _applyDecoratedDescriptor(_class.prototype, 'duration_units_list', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return [];
     }
-}), _descriptor18 = _applyDecoratedDescriptor(_class.prototype, 'duration_min_max', [_mobx.observable], {
+}), _descriptor19 = _applyDecoratedDescriptor(_class.prototype, 'duration_min_max', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return {};
     }
-}), _descriptor19 = _applyDecoratedDescriptor(_class.prototype, 'expiry_date', [_mobx.observable], {
+}), _descriptor20 = _applyDecoratedDescriptor(_class.prototype, 'expiry_date', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '';
     }
-}), _descriptor20 = _applyDecoratedDescriptor(_class.prototype, 'expiry_time', [_mobx.observable], {
+}), _descriptor21 = _applyDecoratedDescriptor(_class.prototype, 'expiry_time', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '09:40';
     }
-}), _descriptor21 = _applyDecoratedDescriptor(_class.prototype, 'expiry_type', [_mobx.observable], {
+}), _descriptor22 = _applyDecoratedDescriptor(_class.prototype, 'expiry_type', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return 'duration';
     }
-}), _descriptor22 = _applyDecoratedDescriptor(_class.prototype, 'barrier_1', [_mobx.observable], {
+}), _descriptor23 = _applyDecoratedDescriptor(_class.prototype, 'barrier_1', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '';
     }
-}), _descriptor23 = _applyDecoratedDescriptor(_class.prototype, 'barrier_2', [_mobx.observable], {
+}), _descriptor24 = _applyDecoratedDescriptor(_class.prototype, 'barrier_2', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '';
     }
-}), _descriptor24 = _applyDecoratedDescriptor(_class.prototype, 'barrier_count', [_mobx.observable], {
+}), _descriptor25 = _applyDecoratedDescriptor(_class.prototype, 'barrier_count', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return 0;
     }
-}), _descriptor25 = _applyDecoratedDescriptor(_class.prototype, 'start_date', [_mobx.observable], {
+}), _descriptor26 = _applyDecoratedDescriptor(_class.prototype, 'start_date', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return Number(0);
     }
-}), _descriptor26 = _applyDecoratedDescriptor(_class.prototype, 'start_dates_list', [_mobx.observable], {
+}), _descriptor27 = _applyDecoratedDescriptor(_class.prototype, 'start_dates_list', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return [];
     }
-}), _descriptor27 = _applyDecoratedDescriptor(_class.prototype, 'start_time', [_mobx.observable], {
+}), _descriptor28 = _applyDecoratedDescriptor(_class.prototype, 'start_time', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return '12:30';
     }
-}), _descriptor28 = _applyDecoratedDescriptor(_class.prototype, 'sessions', [_mobx.observable], {
+}), _descriptor29 = _applyDecoratedDescriptor(_class.prototype, 'sessions', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return [];
     }
-}), _descriptor29 = _applyDecoratedDescriptor(_class.prototype, 'last_digit', [_mobx.observable], {
+}), _descriptor30 = _applyDecoratedDescriptor(_class.prototype, 'last_digit', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return 5;
     }
-}), _descriptor30 = _applyDecoratedDescriptor(_class.prototype, 'proposal_info', [_mobx.observable], {
+}), _descriptor31 = _applyDecoratedDescriptor(_class.prototype, 'proposal_info', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return {};
     }
-}), _descriptor31 = _applyDecoratedDescriptor(_class.prototype, 'purchase_info', [_mobx.observable], {
+}), _descriptor32 = _applyDecoratedDescriptor(_class.prototype, 'purchase_info', [_mobx.observable], {
     enumerable: true,
     initializer: function initializer() {
         return {};
     }
-}), _applyDecoratedDescriptor(_class.prototype, 'init', [_dec], Object.getOwnPropertyDescriptor(_class.prototype, 'init'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onChange', [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, 'onChange'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onHoverPurchase', [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, 'onHoverPurchase'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onPurchase', [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, 'onPurchase'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onClickNewTrade', [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, 'onClickNewTrade'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'updateStore', [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, 'updateStore'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'requestProposal', [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, 'requestProposal'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onProposalResponse', [_dec8], Object.getOwnPropertyDescriptor(_class.prototype, 'onProposalResponse'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onChartBarrierChange', [_dec9], Object.getOwnPropertyDescriptor(_class.prototype, 'onChartBarrierChange'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'updateQueryString', [_dec10], Object.getOwnPropertyDescriptor(_class.prototype, 'updateQueryString'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'changeDurationValidationRules', [_dec11], Object.getOwnPropertyDescriptor(_class.prototype, 'changeDurationValidationRules'), _class.prototype)), _class));
+}), _applyDecoratedDescriptor(_class.prototype, 'init', [_dec], Object.getOwnPropertyDescriptor(_class.prototype, 'init'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onChange', [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, 'onChange'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onHoverPurchase', [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, 'onHoverPurchase'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onPurchase', [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, 'onPurchase'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onClickNewTrade', [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, 'onClickNewTrade'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'updateStore', [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, 'updateStore'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'requestProposal', [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, 'requestProposal'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onProposalResponse', [_dec8], Object.getOwnPropertyDescriptor(_class.prototype, 'onProposalResponse'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onChartBarrierChange', [_dec9], Object.getOwnPropertyDescriptor(_class.prototype, 'onChartBarrierChange'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'updateQueryString', [_dec10], Object.getOwnPropertyDescriptor(_class.prototype, 'updateQueryString'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'changeDurationValidationRules', [_dec11], Object.getOwnPropertyDescriptor(_class.prototype, 'changeDurationValidationRules'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onMount', [_dec12], Object.getOwnPropertyDescriptor(_class.prototype, 'onMount'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'onUnmount', [_dec13], Object.getOwnPropertyDescriptor(_class.prototype, 'onUnmount'), _class.prototype)), _class));
 exports.default = TradeStore;
 ;
 
@@ -24775,23 +24817,28 @@ var URLHelper = function () {
     }, {
         key: 'updateQueryString',
         value: function updateQueryString(store, allowed_query_string_variables) {
+            var set_query_string = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-            var queryParams = URLHelper.getQueryParams();
+
+            var query_params = URLHelper.getQueryParams();
 
             if (!(0, _utility.isEmptyObject)(store)) {
 
                 // create query string by default values in trade_store if the param doesn't exist in query string.
                 allowed_query_string_variables.filter(function (p) {
-                    return !queryParams.get(p);
+                    return !query_params.get(p);
                 }).forEach(function (key) {
                     if (store[key]) {
-                        URLHelper.setQueryParam(_defineProperty({}, key, store[key]));
-                        queryParams.set(key, store[key]);
+                        if (set_query_string) {
+                            URLHelper.setQueryParam(_defineProperty({}, key, store[key]));
+                        }
+
+                        query_params.set(key, store[key]);
                     }
                 });
             }
 
-            return queryParams;
+            return query_params;
         }
     }]);
 
