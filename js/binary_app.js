@@ -20876,8 +20876,10 @@ var SubscriptionManager = function () {
         // callback subscribers
         var subscribers = sub_info.subscribers;
         if (subscribers.length) {
-            if (!sub_info.stream_id) {
-                // first response returned error or not a subscription (i.e. subscribed proposal_open_contract for an expired contract)
+            // remove subscription info when first response returned error
+            // or not a subscription (i.e. subscribed proposal_open_contract for an expired contract)
+            // check msg_type for  
+            if (!sub_info.stream_id && (response.error || response.msg_type === sub_info.msg_type)) {
                 delete subscriptions[sub_id];
             }
             sub_info.subscribers.forEach(function (fnc) {
