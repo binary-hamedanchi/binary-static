@@ -453,19 +453,67 @@ span.tooltip {
     margin: 48px 0 35px;
     height: calc(100vh - 48px - 35px);
     overflow-y: auto;
-    overflow-x: hidden; }
+    overflow-x: hidden;
+    -webkit-transition: -webkit-transform 0.25s ease;
+    transition: -webkit-transform 0.25s ease;
+    transition: transform 0.25s ease;
+    transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+    will-change: transform; }
+    .app-contents > .container:not(.trade-container) {
+      -webkit-transition: -webkit-transform 0.25s ease;
+      transition: -webkit-transform 0.25s ease;
+      transition: transform 0.25s ease;
+      transition: transform 0.25s ease, -webkit-transform 0.25s ease; }
     .app-contents--show-portfolio-drawer {
-      margin-right: 228px; }
-      @media screen and (max-width: 1280px) {
-        .app-contents--show-portfolio-drawer .trade-container .chart-container {
-          grid-column: col-start 1 / span 9; }
-        .app-contents--show-portfolio-drawer .trade-container .sidebar-container, .app-contents--show-portfolio-drawer .trade-container .contract-wrapper {
-          grid-column: col-start 10 / span 3; } }
-      @media screen and (max-width: 980px) {
-        .app-contents--show-portfolio-drawer .trade-container .chart-container {
-          grid-column: col-start 1 / span 8; }
-        .app-contents--show-portfolio-drawer .trade-container .sidebar-container, .app-contents--show-portfolio-drawer .trade-container .contract-wrapper {
-          grid-column: col-start 9 / span 4; } }
+      -webkit-transform: translateX(-228px);
+              transform: translateX(-228px); }
+      .app-contents--show-portfolio-drawer .chart-container .ciq-chart .cq-top-ui-widgets, .app-contents--show-portfolio-drawer .chart-container .ciq-chart .cq-chart-controls {
+        -webkit-transform: translateX(228px);
+                transform: translateX(228px); }
+      .app-contents--show-portfolio-drawer .chart-container .ciq-chart .cq-top-ui-widgets .info-box {
+        -webkit-transform: translateX(-228px);
+                transform: translateX(-228px); }
+      .app-contents--show-portfolio-drawer .chart-container .cq-chart-controls {
+        will-change: max-width;
+        max-width: calc(100% - 228px);
+        -webkit-transform: translateX(228px);
+                transform: translateX(228px); }
+      .app-contents--show-portfolio-drawer .chart-container .cq-chart-control-left .cq-chart-controls {
+        -webkit-transform: translateX(228px) !important;
+                transform: translateX(228px) !important; }
+      .app-contents--show-portfolio-drawer .chart-container .cq-chart-control-left .info-box {
+        -webkit-transform: translateX(-228px) !important;
+                transform: translateX(-228px) !important; }
+      .app-contents--show-portfolio-drawer > .container:not(.trade-container) {
+        -webkit-transform: translateX(228px);
+                transform: translateX(228px);
+        padding-right: 228px; }
+        .app-contents--show-portfolio-drawer > .container:not(.trade-container).portfolio {
+          padding-right: calc(228px + 12px); }
+    .app-contents .chart-container .cq-chart-control-left .cq-chart-controls {
+      -webkit-transform: translateX(0);
+              transform: translateX(0);
+      -webkit-transition: -webkit-transform 0.25s ease;
+      transition: -webkit-transform 0.25s ease;
+      transition: transform 0.25s ease;
+      transition: transform 0.25s ease, -webkit-transform 0.25s ease; }
+    .app-contents .chart-container .cq-chart-control-left .cq-top-ui-widgets {
+      left: 90px; }
+      .app-contents .chart-container .cq-chart-control-left .cq-top-ui-widgets .info-box {
+        -webkit-transform: translateX(0);
+                transform: translateX(0); }
+    .app-contents .chart-container .ciq-chart .cq-top-ui-widgets, .app-contents .chart-container .ciq-chart .info-box {
+      -webkit-transition: -webkit-transform 0.25s ease;
+      transition: -webkit-transform 0.25s ease;
+      transition: transform 0.25s ease;
+      transition: transform 0.25s ease, -webkit-transform 0.25s ease; }
+      .app-contents .chart-container .ciq-chart .cq-top-ui-widgets .cq-symbols-display, .app-contents .chart-container .ciq-chart .info-box .cq-symbols-display {
+        z-index: 1; }
+    .app-contents .chart-container .ciq-chart .cq-chart-controls {
+      -webkit-transition: max-width 0.25s ease, -webkit-transform 0.25s ease;
+      transition: max-width 0.25s ease, -webkit-transform 0.25s ease;
+      transition: max-width 0.25s ease, transform 0.25s ease;
+      transition: max-width 0.25s ease, transform 0.25s ease, -webkit-transform 0.25s ease; }
     @media screen and (max-width: 768px) {
       .app-contents {
         margin-bottom: 0;
@@ -1515,14 +1563,13 @@ hr {
   right: 0;
   -webkit-transform: translateX(100%);
           transform: translateX(100%);
-  -webkit-transition: -webkit-transform 0.25s;
-  transition: -webkit-transform 0.25s;
-  transition: transform 0.25s;
-  transition: transform 0.25s, -webkit-transform 0.25s;
+  -webkit-transition: opacity 0.4s linear;
+  transition: opacity 0.4s linear;
   border-left: 1px solid #e9e9ed;
   background-color: #fff;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  opacity: 0;
   color: #2a3052;
   /*
         PORTFOLIO DRAWER CARD STARTS
@@ -1532,7 +1579,8 @@ hr {
     */ }
   .portfolio-drawer--open {
     -webkit-transform: translateX(0);
-            transform: translateX(0); }
+            transform: translateX(0);
+    opacity: 1; }
   .portfolio-drawer__header {
     height: 40px;
     display: -webkit-box;
@@ -1737,9 +1785,7 @@ hr {
           touch-action: manipulation; }
     .input-field input.error {
       color: #f44336;
-      /* stylelint-disable-line color-no-hex */
-      border: 1px solid #f44336;
-      /* stylelint-disable-line color-no-hex */ }
+      border: 1px solid #f44336 !important; }
   .input-field label.input-label {
     font-size: 0.875rem;
     /* stylelint-disable-line number-max-precision */
@@ -2777,10 +2823,15 @@ div.contracts-popup-container {
       padding-right: 0; }
   .table__row {
     display: grid;
+    grid-auto-rows: -webkit-min-content;
+    grid-auto-rows: min-content;
     padding: 0 16px;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
-    border-bottom: 1px solid #e9e9ed; }
+    border-bottom: 1px solid #e9e9ed;
+    text-decoration: none; }
+    .table__row, .table__row:active, .table__row:visited {
+      color: #333; }
   .table__head {
     height: 42px;
     border-bottom: 1px solid #e9e9ed; }
@@ -2788,7 +2839,17 @@ div.contracts-popup-container {
     height: 100%;
     border-bottom: none; }
   .table__body {
-    overflow-y: auto; }
+    overflow-y: auto;
+    -webkit-box-flex: 1;
+        -ms-flex-positive: 1;
+            flex-grow: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column; }
   .table__body .table__row:hover {
     background-color: #fafafb;
     cursor: pointer; }
@@ -4129,15 +4190,14 @@ a {
       .theme-wrapper.dark .contract-container .contract-contents .info-item > div:first-child {
         color: #aaacba; }
 
-.theme-wrapper.dark .info-box-container {
+.theme-wrapper.dark .info-box-container .info-box {
+  background: rgba(42, 48, 82, 0.6);
   border-color: #4a4f6c; }
-  .theme-wrapper.dark .info-box-container .info-box {
-    background: rgba(42, 48, 82, 0.6); }
-    .theme-wrapper.dark .info-box-container .info-box .general .sell {
-      border-left-color: #4a4f6c; }
-      .theme-wrapper.dark .info-box-container .info-box .general .sell .btn:disabled {
-        background: #4a4f6c;
-        color: #60647e !important; }
+  .theme-wrapper.dark .info-box-container .info-box .general .sell {
+    border-left-color: #4a4f6c; }
+    .theme-wrapper.dark .info-box-container .info-box .general .sell .btn:disabled {
+      background: #4a4f6c;
+      color: #60647e !important; }
 
 .portfolio {
   padding: 1.5rem 12px;
@@ -4186,9 +4246,10 @@ a {
   .portfolio .reference a {
     color: #1565c0;
     text-decoration: none; }
-  .portfolio .indicative {
-    text-align: right;
+  .portfolio .table__body .indicative {
     font-weight: bold; }
+  .portfolio .indicative {
+    text-align: right; }
     .portfolio .indicative--price-moved-up {
       color: #4caf50; }
     .portfolio .indicative--price-moved-down {
@@ -4613,9 +4674,6 @@ a {
       color: #4caf50; }
     .statement .amount--loss {
       color: #f44336; }
-  .statement .refid a {
-    color: #1565c0;
-    text-decoration: none; }
   .statement--card-view {
     background: #fafafb;
     overflow: hidden; }
@@ -5233,29 +5291,6 @@ body.dark, .theme-wrapper.dark {
       color: #fff; }
     body.dark .app-contents .portfolio.container, .theme-wrapper.dark .app-contents .portfolio.container {
       background: #2a3052; }
-      body.dark .app-contents .portfolio.container .table, .theme-wrapper.dark .app-contents .portfolio.container .table {
-        color: #aaacba;
-        border-color: #4a4f6c; }
-        body.dark .app-contents .portfolio.container .table .table__head, body.dark .app-contents .portfolio.container .table .table__foot, .theme-wrapper.dark .app-contents .portfolio.container .table .table__head, .theme-wrapper.dark .app-contents .portfolio.container .table .table__foot {
-          border-color: #4a4f6c;
-          background-color: #353b5b; }
-          body.dark .app-contents .portfolio.container .table .table__head .table__row, body.dark .app-contents .portfolio.container .table .table__foot .table__row, .theme-wrapper.dark .app-contents .portfolio.container .table .table__head .table__row, .theme-wrapper.dark .app-contents .portfolio.container .table .table__foot .table__row {
-            border-color: #4a4f6c; }
-        body.dark .app-contents .portfolio.container .table .table__body .table__cell.reference, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__cell.reference {
-          color: #2196f3; }
-        body.dark .app-contents .portfolio.container .table .table__body .table__cell.details, body.dark .app-contents .portfolio.container .table .table__body .table__cell.payout, body.dark .app-contents .portfolio.container .table .table__body .table__cell.purchase, body.dark .app-contents .portfolio.container .table .table__body .table__cell.remaining_time, body.dark .app-contents .portfolio.container .table .table__body .table__cell.indicative, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__cell.details, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__cell.payout, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__cell.purchase, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__cell.remaining_time, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__cell.indicative {
-          color: #aaacba; }
-        body.dark .app-contents .portfolio.container .table .table__body .table__row, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__row {
-          background: #2a3052;
-          border-color: #4a4f6c; }
-          body.dark .app-contents .portfolio.container .table .table__body .table__row .table__cell.payout span.symbol, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__row .table__cell.payout span.symbol {
-            background: #2a3052; }
-          body.dark .app-contents .portfolio.container .table .table__body .table__row:hover, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__row:hover {
-            background: #4a4f6c; }
-            body.dark .app-contents .portfolio.container .table .table__body .table__row:hover td.payout span.symbol, .theme-wrapper.dark .app-contents .portfolio.container .table .table__body .table__row:hover td.payout span.symbol {
-              background: #4a4f6c; }
-        body.dark .app-contents .portfolio.container .table .table__foot, .theme-wrapper.dark .app-contents .portfolio.container .table .table__foot {
-          color: #fff; }
     body.dark .app-contents .portfolio-empty span, body.dark .app-contents .statement-empty span, .theme-wrapper.dark .app-contents .portfolio-empty span, .theme-wrapper.dark .app-contents .statement-empty span {
       color: #aaacba; }
     body.dark .app-contents .portfolio-empty button.btn span, body.dark .app-contents .statement-empty button.btn span, .theme-wrapper.dark .app-contents .portfolio-empty button.btn span, .theme-wrapper.dark .app-contents .statement-empty button.btn span {
@@ -5266,22 +5301,18 @@ body.dark, .theme-wrapper.dark {
       border-color: #4a4f6c; }
     body.dark .app-contents .statement.container .statement__content, .theme-wrapper.dark .app-contents .statement.container .statement__content {
       background: #2a3052; }
-      body.dark .app-contents .statement.container .statement__content .table, .theme-wrapper.dark .app-contents .statement.container .statement__content .table {
+    body.dark .app-contents .table, .theme-wrapper.dark .app-contents .table {
+      border-color: #4a4f6c; }
+      body.dark .app-contents .table__head, body.dark .app-contents .table__foot, .theme-wrapper.dark .app-contents .table__head, .theme-wrapper.dark .app-contents .table__foot {
+        background: #353b5b; }
+      body.dark .app-contents .table__head, body.dark .app-contents .table__foot, body.dark .app-contents .table__row, .theme-wrapper.dark .app-contents .table__head, .theme-wrapper.dark .app-contents .table__foot, .theme-wrapper.dark .app-contents .table__row {
         border-color: #4a4f6c; }
-        body.dark .app-contents .statement.container .statement__content .table .table__head, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__head {
-          background: #353b5b;
-          border-color: #4a4f6c; }
-          body.dark .app-contents .statement.container .statement__content .table .table__head .table__row, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__head .table__row {
-            border-color: #4a4f6c;
-            color: #aaacba; }
-        body.dark .app-contents .statement.container .statement__content .table .table__body .table__row, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__body .table__row {
-          border-color: #4a4f6c; }
-          body.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.date, body.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.desc, body.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.action, body.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.payout, body.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.balance, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.date, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.desc, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.action, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.payout, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.balance {
-            color: #aaacba; }
-          body.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.refid, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__body .table__row .table__cell.refid {
-            color: #2196f3; }
-          body.dark .app-contents .statement.container .statement__content .table .table__body .table__row:hover, .theme-wrapper.dark .app-contents .statement.container .statement__content .table .table__body .table__row:hover {
-            background: #4a4f6c; }
+      body.dark .app-contents .table__body .table__row:hover, .theme-wrapper.dark .app-contents .table__body .table__row:hover {
+        background: #4a4f6c; }
+      body.dark .app-contents .table__body .table__row, body.dark .app-contents .table__body .table__row:active, body.dark .app-contents .table__body .table__row:visited, .theme-wrapper.dark .app-contents .table__body .table__row, .theme-wrapper.dark .app-contents .table__body .table__row:active, .theme-wrapper.dark .app-contents .table__body .table__row:visited {
+        color: #aaacba; }
+      body.dark .app-contents .table__cell, .theme-wrapper.dark .app-contents .table__cell {
+        color: #aaacba; }
     body.dark .app-contents .card-list__card, .theme-wrapper.dark .app-contents .card-list__card {
       background-color: #2a3052;
       border-color: #4a4f6c; }
