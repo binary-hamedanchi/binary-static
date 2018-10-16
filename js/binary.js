@@ -18609,6 +18609,8 @@ var ContentVisibility = __webpack_require__(266);
 var GTM = __webpack_require__(58);
 var Login = __webpack_require__(51);
 var getElementById = __webpack_require__(3).getElementById;
+var urlLang = __webpack_require__(20).urlLang;
+var localizeForLang = __webpack_require__(2).forLang;
 var localize = __webpack_require__(2).localize;
 var ScrollToAnchor = __webpack_require__(255);
 var isStorageSupported = __webpack_require__(6).isStorageSupported;
@@ -18630,6 +18632,8 @@ var BinaryLoader = function () {
             Header.displayNotification(localize('[_1] requires your browser\'s web storage to be enabled in order to function properly. Please enable it or exit private browsing mode.', ['Binary.com']), true, 'STORAGE_NOT_SUPPORTED');
             getElementById('btn_login').classList.add('button-disabled');
         }
+
+        localizeForLang(urlLang());
 
         Page.showNotificationOutdatedBrowser();
 
@@ -21459,7 +21463,6 @@ var getElementById = __webpack_require__(3).getElementById;
 var Crowdin = __webpack_require__(162);
 var Language = __webpack_require__(20);
 var PushNotification = __webpack_require__(253);
-var Localize = __webpack_require__(2);
 var localize = __webpack_require__(2).localize;
 var State = __webpack_require__(6).State;
 var scrollToTop = __webpack_require__(86).scrollToTop;
@@ -21518,7 +21521,6 @@ var Page = function () {
             if (!Login.isLoginPages()) {
                 Language.setCookie(Language.urlLang());
             }
-            Localize.forLang(Language.urlLang());
             Header.onLoad();
             Footer.onLoad();
             Language.setCookie();
