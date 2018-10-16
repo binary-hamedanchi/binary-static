@@ -1803,7 +1803,7 @@ var Header = function () {
             Client.getAllLoginids().forEach(function (loginid) {
                 if (!Client.get('is_disabled', loginid) && Client.get('token', loginid)) {
                     var account_title = Client.getAccountTitle(loginid);
-                    var is_real = /real/i.test(account_title);
+                    var is_real = !Client.isAccountOfType('virtual', loginid);
                     var currency = Client.get('currency', loginid);
                     var localized_type = localize('[_1] Account', [is_real && currency ? currency : account_title]);
                     if (loginid === Client.get('loginid')) {
