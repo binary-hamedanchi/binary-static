@@ -4273,7 +4273,7 @@ var Dialog = function () {
 
                     if (!el_dialog) return;
 
-                    var localized_message = Array.isArray(options.message) ? options.message.join('<p />') : options.message;
+                    var localized_message = Array.isArray(options.localized_message) ? options.localized_message.join('<p />') : options.localized_message;
                     elementInnerHtml(container.querySelector('#dialog_message'), localized_message);
 
                     if (is_alert) {
