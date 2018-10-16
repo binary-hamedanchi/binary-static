@@ -3142,7 +3142,7 @@ var Validation = function () {
     var validRequired = function validRequired(value, options, field) {
         if (value.length) return true;
         // else
-        validators_map.req.message = field.type === 'checkbox' ? localize('Please select the checkbox.') : localize('This field is required.');
+        ValidatorsMap.get().req.message = field.type === 'checkbox' ? localize('Please select the checkbox.') : localize('This field is required.');
         return false;
     };
     var validEmail = function validEmail(value) {
@@ -3234,7 +3234,7 @@ var Validation = function () {
             message = localize('Should be less than [_1]', [addComma(options.max, options.format_money ? getDecimalPlaces(Client.get('currency')) : undefined)]);
         }
 
-        validators_map.number.message = message;
+        ValidatorsMap.get().number.message = message;
         return is_ok;
     };
 
@@ -3242,24 +3242,39 @@ var Validation = function () {
         return options.type === 'float' ? +value > +options.max : compareBigUnsignedInt(value, options.max) === 1;
     };
 
-    var validators_map = {
-        req: { func: validRequired, message: '' },
-        email: { func: validEmail, message: localize('Invalid email address.') },
-        password: { func: validPassword, message: localize('Password should have lower and uppercase letters with numbers.') },
-        general: { func: validGeneral, message: localize('Only letters, numbers, space, hyphen, period, and apostrophe are allowed.') },
-        address: { func: validAddress, message: localize('Only letters, numbers, space, and these special characters are allowed: [_1]', '- . \' # ; : ( ) , @ /') },
-        letter_symbol: { func: validLetterSymbol, message: localize('Only letters, space, hyphen, period, and apostrophe are allowed.') },
-        postcode: { func: validPostCode, message: localize('Only letters, numbers, space, and hyphen are allowed.') },
-        phone: { func: validPhone, message: localize('Only numbers and spaces are allowed.') },
-        compare: { func: validCompare, message: localize('The two passwords that you entered do not match.') },
-        not_equal: { func: validNotEqual, message: localizeKeepPlaceholders('[_1] and [_2] cannot be the same.') },
-        min: { func: validMin, message: localizeKeepPlaceholders('Minimum of [_1] characters required.') },
-        length: { func: validLength, message: localizeKeepPlaceholders('You should enter [_1] characters.') },
-        number: { func: validNumber, message: '' },
-        regular: { func: validRegular, message: '' },
-        tax_id: { func: validTaxID, message: localize('Should start with letter or number, and may contain hyphen and underscore.') },
-        token: { func: validEmailToken, message: localize('Invalid verification code.') }
-    };
+    var ValidatorsMap = function () {
+        var validators_map = void 0;
+
+        var initValidatorsMap = function initValidatorsMap() {
+            return {
+                req: { func: validRequired, message: '' },
+                email: { func: validEmail, message: localize('Invalid email address.') },
+                password: { func: validPassword, message: localize('Password should have lower and uppercase letters with numbers.') },
+                general: { func: validGeneral, message: localize('Only letters, numbers, space, hyphen, period, and apostrophe are allowed.') },
+                address: { func: validAddress, message: localize('Only letters, numbers, space, and these special characters are allowed: [_1]', '- . \' # ; : ( ) , @ /') },
+                letter_symbol: { func: validLetterSymbol, message: localize('Only letters, space, hyphen, period, and apostrophe are allowed.') },
+                postcode: { func: validPostCode, message: localize('Only letters, numbers, space, and hyphen are allowed.') },
+                phone: { func: validPhone, message: localize('Only numbers and spaces are allowed.') },
+                compare: { func: validCompare, message: localize('The two passwords that you entered do not match.') },
+                not_equal: { func: validNotEqual, message: localizeKeepPlaceholders('[_1] and [_2] cannot be the same.') },
+                min: { func: validMin, message: localizeKeepPlaceholders('Minimum of [_1] characters required.') },
+                length: { func: validLength, message: localizeKeepPlaceholders('You should enter [_1] characters.') },
+                number: { func: validNumber, message: '' },
+                regular: { func: validRegular, message: '' },
+                tax_id: { func: validTaxID, message: localize('Should start with letter or number, and may contain hyphen and underscore.') },
+                token: { func: validEmailToken, message: localize('Invalid verification code.') }
+            };
+        };
+
+        return {
+            get: function get(key) {
+                if (!validators_map) {
+                    validators_map = initValidatorsMap();
+                }
+                return key ? validators_map[key] : validators_map;
+            }
+        };
+    }();
 
     var pass_length = function pass_length(type) {
         return { min: /^mt$/.test(type) ? 8 : 6, max: 25 };
@@ -3295,7 +3310,7 @@ var Validation = function () {
                 type = 'length';
                 options = pass_length(options);
             } else {
-                var validator = type === 'custom' ? options.func : validators_map[type].func;
+                var validator = type === 'custom' ? options.func : ValidatorsMap.get(type).func;
 
                 var value = getFieldValue(field, options);
                 if (field_type !== 'password' && typeof value === 'string') {
@@ -3306,7 +3321,7 @@ var Validation = function () {
             }
 
             if (!field.is_ok) {
-                message = options.message || validators_map[type].message;
+                message = options.message || ValidatorsMap.get(type).message;
                 if (type === 'length') {
                     message = template(message, [options.min === options.max ? options.min : options.min + '-' + options.max]);
                 } else if (type === 'min') {
