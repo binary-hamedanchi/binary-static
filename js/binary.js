@@ -1803,7 +1803,7 @@ var Header = function () {
             Client.getAllLoginids().forEach(function (loginid) {
                 if (!Client.get('is_disabled', loginid) && Client.get('token', loginid)) {
                     var account_title = Client.getAccountTitle(loginid);
-                    var is_real = !Client.isAccountOfType('virtual', loginid);
+                    var is_real = !Client.getAccountType(loginid); // none of virtual/gaming/financial
                     var currency = Client.get('currency', loginid);
                     var localized_type = localize('[_1] Account', [is_real && currency ? currency : account_title]);
                     if (loginid === Client.get('loginid')) {
@@ -28475,8 +28475,8 @@ var AuthorisedApps = function () {
         if (elements.table) {
             return FlexTableUI.replace(data);
         }
-        var localized_headers = localize(['Name', 'Permissions', 'Last Used']);
-        var header_columns = ['name', 'permissions', 'last-used'];
+        var localized_headers = localize(['Name', 'Permissions', 'Last Login']);
+        var header_columns = ['name', 'permissions', 'last-login'];
         can_revoke = /admin/.test((State.getResponse('authorize') || {}).scopes);
         if (can_revoke) {
             localized_headers.push(localize('Action'));
@@ -32427,7 +32427,7 @@ module.exports = {
     },
     AffiliatesFAQ: {
         onLoad: function onLoad() {
-            MenuSelector.init(['general', 'account-management-and-tracking', 'marketing-and-promotions', 'support']);
+            MenuSelector.init(['general', 'account-management-and-tracking', 'referral-tools', 'support']);
         },
         onUnload: function onUnload() {
             MenuSelector.clean();
@@ -32435,7 +32435,7 @@ module.exports = {
     },
     IBProgrammeFAQ: {
         onLoad: function onLoad() {
-            MenuSelector.init(['general', 'account-management', 'marketing-and-promotions']);
+            MenuSelector.init(['general', 'account-management', 'referral-tools']);
         },
         onUnload: function onUnload() {
             MenuSelector.clean();
