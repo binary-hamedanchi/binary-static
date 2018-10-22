@@ -7,14 +7,14 @@ const Contact = () => (
             <div className='overlay'>
                 <div className='search align-self-center'>
                     <h1 className='center-text'>{it.L('How can we help?')}</h1>
-                    <elevio-element data-type='search' />
+                    <div id='elevio_element_search' />
                 </div>
             </div>
         </div>
         <div id='contact_content' className='container'>
             <div className='elevio-container gr-padding-30'>
-                <elevio-element data-type='menu' />
-                <elevio-element data-type='suggestions' />
+                <div id='elevio_element_menu' />
+                <div id='elevio_element_suggestions' />
             </div>
 
             <div className='gr-row'>

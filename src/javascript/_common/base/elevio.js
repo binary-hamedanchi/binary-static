@@ -27,8 +27,11 @@ const Elevio = (() => {
         });
     };
 
+    const createComponent = (type) => window._elev.component({ type }); // eslint-disable-line no-underscore-dangle
+
     return {
         init,
+        createComponent,
     };
 })();
 
