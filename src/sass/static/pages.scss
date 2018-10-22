@@ -285,48 +285,55 @@
     }
 }
 
-.contact-content {
-    .contact-content {
-        padding: 0 100px;
+#content.contact-content {
+    margin-top: 0;
 
-        @media screen and (max-width: 1024px) {
-            padding: 0 10px;
-        }
-    }
-    .u-mar-bottom-small {
-        margin-bottom: 15px;
-    }
-    #cs_telephone_number {
-        width: 100%;
-        min-width: 160px;
-    }
-    #company_addresses .border-bottom {
-        min-height: 200px;
-    }
-    @media screen and (max-width: 480px) {
-        #company_addresses .border-bottom {
-            min-height: 130px;
-        }
-    }
+    .top-banner {
+        background: url('../images/pages/contact/contact-banner.jpg') no-repeat;
+        background-size: cover;
+        min-height: 350px;
+        background-position: center;
+        position: relative;
 
-    .chat {
-        margin-top: 20px;
-
-        @media screen and (max-width: 1024px) {
-            margin-bottom: 20px;
-        }
-
-        &-container {
+        .overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
             display: flex;
+            justify-content: center;
 
-            .button-secondary {
-                margin: 0;
+            .search {
+                width: 600px;
+                max-width: 95%;
+
+                div#_elev_io_placebo {
+                    border: 1px solid $COLOR_CONTROL_BORDER;
+                    border-radius: $BORDER_RADIUS;
+                    background-color: $COLOR_WHITE;
+
+                    > span._10b1r { // search icon
+                        background: url('../images/pages/contact/search-icon.svg') center no-repeat;
+                        width: 30px;
+
+                        svg {
+                            display: none;
+                        }
+                    }
+                }
             }
         }
-        &-icon {
-            margin-right: 5px;
-            height: 38px;
-            width: 38px;
+    }
+    .phone-container {
+        align-items: center;
+        justify-content: center;
+
+        #cs_telephone_number {
+            width: 100%;
+            min-width: 160px;
+        }
+        #display_cs_telephone {
+            line-height: 1.5rem;
         }
     }
 }

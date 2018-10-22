@@ -3,6 +3,7 @@ import Head from './head.jsx';
 import Header from './header.jsx';
 import MobileMenu from './mobile_menu.jsx';
 import Footer from './footer.jsx';
+import Elevio from '../../_common/includes/elevio.jsx';
 import Gtm from '../../_common/includes/gtm.jsx';
 import Title from '../../_common/components/title.jsx';
 
@@ -51,6 +52,7 @@ const Layout = () => {
                     </div>
                     <Footer />
                 </div>
+                <Elevio />
             </body>
         </html>
     );
