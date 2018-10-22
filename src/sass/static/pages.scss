@@ -328,12 +328,21 @@
         align-items: center;
         justify-content: center;
 
-        #cs_telephone_number {
-            width: 100%;
-            min-width: 160px;
+        label {
+            margin-bottom: 5px;
         }
-        #display_cs_telephone {
-            line-height: 1.5rem;
+        .number-container {
+            margin-left: 15px;
+
+            #cs_telephone_number {
+                width: 100%;
+                min-width: 160px;
+            }
+            #display_cs_telephone {
+                line-height: 1.5rem;
+                align-self: flex-end;
+                padding-top: 10px;
+            }
         }
     }
 }

@@ -24,7 +24,7 @@ const Contact = (() => {
         const m = str.match(/ \(Toll Free\)/i);
         const number = m ? str.slice(0, m.index) : str;
         const append = m ? str.slice(m.index) : '';
-        return `<a href="tel:${number}">${number}</a>${append}`;
+        return `<span><a href="tel:${number}">${number}</a>${append}</span>`;
     };
 
     return {
