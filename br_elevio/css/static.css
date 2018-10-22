@@ -972,41 +972,49 @@ div.kineticjs-content {
       position: relative;
       opacity: 1; }
 
-.contact-content .contact-content {
-  padding: 0 100px; }
-  @media screen and (max-width: 1024px) {
-    .contact-content .contact-content {
-      padding: 0 10px; } }
-
-.contact-content .u-mar-bottom-small {
-  margin-bottom: 15px; }
-
-.contact-content #cs_telephone_number {
-  width: 100%;
-  min-width: 160px; }
-
-.contact-content #company_addresses .border-bottom {
-  min-height: 200px; }
-
-@media screen and (max-width: 480px) {
-  .contact-content #company_addresses .border-bottom {
-    min-height: 130px; } }
-
-.contact-content .chat {
-  margin-top: 20px; }
-  @media screen and (max-width: 1024px) {
-    .contact-content .chat {
-      margin-bottom: 20px; } }
-  .contact-content .chat-container {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex; }
-    .contact-content .chat-container .button-secondary {
-      margin: 0; }
-  .contact-content .chat-icon {
-    margin-right: 5px;
-    height: 38px;
-    width: 38px; }
+#content.contact-content {
+  margin-top: 0; }
+  #content.contact-content .top-banner {
+    background: url("../images/pages/contact/contact-banner.jpg") no-repeat;
+    background-size: cover;
+    min-height: 350px;
+    background-position: center;
+    position: relative; }
+    #content.contact-content .top-banner .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center; }
+      #content.contact-content .top-banner .overlay .search {
+        width: 600px;
+        max-width: 95%; }
+        #content.contact-content .top-banner .overlay .search div#_elev_io_placebo {
+          border: 1px solid #dadada;
+          border-radius: 4px;
+          background-color: #fff; }
+          #content.contact-content .top-banner .overlay .search div#_elev_io_placebo > span._10b1r {
+            background: url("../images/pages/contact/search-icon.svg") center no-repeat;
+            width: 30px; }
+            #content.contact-content .top-banner .overlay .search div#_elev_io_placebo > span._10b1r svg {
+              display: none; }
+  #content.contact-content .phone-container {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
+    #content.contact-content .phone-container #cs_telephone_number {
+      width: 100%;
+      min-width: 160px; }
+    #content.contact-content .phone-container #display_cs_telephone {
+      line-height: 1.5rem; }
 
 #content.cyberjaya-content, #content.malta-content, #content.labuan-content {
   margin-top: 0; }
