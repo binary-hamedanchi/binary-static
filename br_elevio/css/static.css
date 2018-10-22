@@ -1010,11 +1010,18 @@ div.kineticjs-content {
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center; }
-    #content.contact-content .phone-container #cs_telephone_number {
-      width: 100%;
-      min-width: 160px; }
-    #content.contact-content .phone-container #display_cs_telephone {
-      line-height: 1.5rem; }
+    #content.contact-content .phone-container label {
+      margin-bottom: 5px; }
+    #content.contact-content .phone-container .number-container {
+      margin-left: 15px; }
+      #content.contact-content .phone-container .number-container #cs_telephone_number {
+        width: 100%;
+        min-width: 160px; }
+      #content.contact-content .phone-container .number-container #display_cs_telephone {
+        line-height: 1.5rem;
+        -ms-flex-item-align: end;
+            align-self: flex-end;
+        padding-top: 10px; }
 
 #content.cyberjaya-content, #content.malta-content, #content.labuan-content {
   margin-top: 0; }

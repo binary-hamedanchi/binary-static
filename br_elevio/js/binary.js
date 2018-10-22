@@ -32020,12 +32020,12 @@ var Contact = function () {
             $('#display_cs_telephone').html(val[0] + (val.length > 1 ? val[1] : ''));
         });
 
-        // elevio elements
-        window._elev.on('ready', setElements); // eslint-disable-line no-underscore-dangle
+        window._elev.on('ready', embedElevioComponents); // eslint-disable-line no-underscore-dangle
     };
 
-    var setElements = function setElements() {
-        ['search', 'menu', 'suggestions'].forEach(function (type) {
+    var embedElevioComponents = function embedElevioComponents() {
+        var component_types = ['menu', 'search', 'suggestions'];
+        component_types.forEach(function (type) {
             $('#elevio_element_' + type).html(Elevio.createComponent(type));
         });
     };
@@ -32035,7 +32035,7 @@ var Contact = function () {
         var m = str.match(/ \(Toll Free\)/i);
         var number = m ? str.slice(0, m.index) : str;
         var append = m ? str.slice(m.index) : '';
-        return '<a href="tel:' + number + '">' + number + '</a>' + append;
+        return '<span><a href="tel:' + number + '">' + number + '</a>' + append + '</span>';
     };
 
     return {
