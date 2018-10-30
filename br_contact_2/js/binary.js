@@ -11921,7 +11921,7 @@ var elementInnerHtml = __webpack_require__(3).elementInnerHtml;
 var State = __webpack_require__(6).State;
 
 var Elevio = function () {
-    var available_countries = ['in', 'lk', 'ng', 'za'];
+    var available_countries = ['in', 'lk', 'ng', 'za', 'my'];
 
     var init = function init() {
         BinarySocket.wait('website_status').then(function () {

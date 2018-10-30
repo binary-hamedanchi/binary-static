@@ -1028,6 +1028,8 @@ div.kineticjs-content {
           width: 30px; }
           #content.contact-2-content #top_banner .search div#_elev_io_placebo > span._10b1r svg {
             display: none; }
+        #content.contact-2-content #top_banner .search div#_elev_io_placebo input {
+          background: transparent !important; }
   #content.contact-2-content #elevio_menu_container {
     background: #f2f2f2;
     padding: 20px; }
