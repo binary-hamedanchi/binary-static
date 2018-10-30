@@ -11930,6 +11930,7 @@ var Elevio = function () {
                     // eslint-disable-line no-underscore-dangle
                     // window._elev.setLanguage(lang);
                     setUserInfo(elev);
+                    setTranslations(elev);
 
                     var el_elevio_styles = document.getElementsByClassName('elevio-styles')[0];
                     if (el_elevio_styles) {
@@ -11943,6 +11944,16 @@ var Elevio = function () {
 
     var isAvailable = function isAvailable() {
         return new RegExp('^(' + available_countries.join('|') + ')$', 'i').test(State.getResponse('website_status.clients_country'));
+    };
+
+    var setTranslations = function setTranslations(elev) {
+        elev.setTranslations({
+            modules: {
+                support: {
+                    thankyou: 'Thanks you, we\'ll get back to you within 24 hours'
+                }
+            }
+        });
     };
 
     var setUserInfo = function setUserInfo(elev) {
