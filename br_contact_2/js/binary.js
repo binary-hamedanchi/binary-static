@@ -11917,8 +11917,8 @@ module.exports = ViewPopupUI;
 
 var ClientBase = __webpack_require__(87);
 var BinarySocket = __webpack_require__(59);
-var elementInnerHtml = __webpack_require__(3).elementInnerHtml;
 var State = __webpack_require__(6).State;
+var createElement = __webpack_require__(1).createElement;
 
 var Elevio = function () {
     var available_countries = ['in', 'lk', 'ng', 'za'];
@@ -11932,11 +11932,9 @@ var Elevio = function () {
                     setUserInfo(elev);
                     setTranslations(elev);
 
-                    var el_elevio_styles = document.getElementsByClassName('elevio-styles')[0];
-                    if (el_elevio_styles) {
-                        // we have to update the style since the launcher element gets updates even after elevio's 'ready' event fired
-                        elementInnerHtml(el_elevio_styles, elementInnerHtml(el_elevio_styles) + ' ._elevio_launcher {display: block;}');
-                    }
+                    // we have to add the style since the launcher element gets updates even after elevio's 'ready' event fired
+                    var el_launcher_style = createElement('style', { html: '._elevio_launcher {display: block;}' });
+                    document.head.appendChild(el_launcher_style);
                 });
             }
         });
@@ -11950,7 +11948,7 @@ var Elevio = function () {
         elev.setTranslations({
             modules: {
                 support: {
-                    thankyou: 'Thanks you, we\'ll get back to you within 24 hours'
+                    thankyou: 'Thanks you, we\'ll get back to you within 24 hours' // Elevio is available only on EN for now
                 }
             }
         });
