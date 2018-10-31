@@ -11931,10 +11931,7 @@ var Elevio = function () {
                     // window._elev.setLanguage(lang);
                     setUserInfo(elev);
                     setTranslations(elev);
-
-                    // we have to add the style since the launcher element gets updates even after elevio's 'ready' event fired
-                    var el_launcher_style = createElement('style', { html: '._elevio_launcher {display: block;}' });
-                    document.head.appendChild(el_launcher_style);
+                    makeLauncherVisible();
                 });
             }
         });
@@ -11944,14 +11941,10 @@ var Elevio = function () {
         return new RegExp('^(' + available_countries.join('|') + ')$', 'i').test(State.getResponse('website_status.clients_country'));
     };
 
-    var setTranslations = function setTranslations(elev) {
-        elev.setTranslations({
-            modules: {
-                support: {
-                    thankyou: 'Thanks you, we\'ll get back to you within 24 hours' // Elevio is available only on EN for now
-                }
-            }
-        });
+    var makeLauncherVisible = function makeLauncherVisible() {
+        // we have to add the style since the launcher element gets updates even after elevio's 'ready' event fired
+        var el_launcher_style = createElement('style', { html: '._elevio_launcher {display: block;}' });
+        document.head.appendChild(el_launcher_style);
     };
 
     var setUserInfo = function setUserInfo(elev) {
@@ -11970,6 +11963,16 @@ var Elevio = function () {
                 elev.setUser(user_obj);
             });
         }
+    };
+
+    var setTranslations = function setTranslations(elev) {
+        elev.setTranslations({
+            modules: {
+                support: {
+                    thankyou: 'Thank you, we\'ll get back to you within 24 hours' // Elevio is available only on EN for now
+                }
+            }
+        });
     };
 
     var createComponent = function createComponent(type) {
