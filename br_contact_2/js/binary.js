@@ -553,7 +553,7 @@ module.exports = Client;
 "use strict";
 
 
-var Cookies = __webpack_require__(56);
+var Cookies = __webpack_require__(57);
 var getPropertyValue = __webpack_require__(1).getPropertyValue;
 var isEmptyObject = __webpack_require__(1).isEmptyObject;
 
@@ -1192,7 +1192,7 @@ module.exports = BinaryPjax;
 "use strict";
 
 
-var Validation = __webpack_require__(52);
+var Validation = __webpack_require__(53);
 var BinarySocket = __webpack_require__(4);
 var getHashValue = __webpack_require__(8).getHashValue;
 var isEmptyObject = __webpack_require__(1).isEmptyObject;
@@ -1360,7 +1360,7 @@ module.exports = FormManager;
 "use strict";
 
 
-var Cookies = __webpack_require__(56);
+var Cookies = __webpack_require__(57);
 var elementTextContent = __webpack_require__(3).elementTextContent;
 var getElementById = __webpack_require__(3).getElementById;
 var CookieStorage = __webpack_require__(6).CookieStorage;
@@ -1739,8 +1739,8 @@ var Client = __webpack_require__(5);
 var BinarySocket = __webpack_require__(4);
 var showHidePulser = __webpack_require__(122).showHidePulser;
 var MetaTrader = __webpack_require__(132);
-var GTM = __webpack_require__(58);
-var Login = __webpack_require__(51);
+var GTM = __webpack_require__(51);
+var Login = __webpack_require__(52);
 var SocketCache = __webpack_require__(76);
 var elementInnerHtml = __webpack_require__(3).elementInnerHtml;
 var elementTextContent = __webpack_require__(3).elementTextContent;
@@ -2971,6 +2971,185 @@ module.exports = {
 "use strict";
 
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var Cookies = __webpack_require__(57);
+var moment = __webpack_require__(9);
+var ClientBase = __webpack_require__(87);
+var Login = __webpack_require__(52);
+var ServerTime = __webpack_require__(162);
+var BinarySocket = __webpack_require__(59);
+var getElementById = __webpack_require__(3).getElementById;
+var isVisible = __webpack_require__(3).isVisible;
+var getLanguage = __webpack_require__(20).get;
+var State = __webpack_require__(6).State;
+var getPropertyValue = __webpack_require__(1).getPropertyValue;
+var getAppId = __webpack_require__(22).getAppId;
+
+var GTM = function () {
+    var isGtmApplicable = function isGtmApplicable() {
+        return (/^(1|1098|14473)$/.test(getAppId())
+        );
+    };
+
+    var getCommonVariables = function getCommonVariables() {
+        return _extends({
+            language: getLanguage(),
+            pageTitle: pageTitle(),
+            pjax: State.get('is_loaded_by_pjax'),
+            url: document.URL
+        }, ClientBase.isLoggedIn() && { visitorId: ClientBase.get('loginid') });
+    };
+
+    var pushDataLayer = function pushDataLayer(data) {
+        if (isGtmApplicable() && !Login.isLoginPages()) {
+            dataLayer.push(_extends({}, getCommonVariables(), data));
+        }
+    };
+
+    var pageTitle = function pageTitle() {
+        var t = /^.+[:-]\s*(.+)$/.exec(document.title);
+        return t && t[1] ? t[1] : document.title;
+    };
+
+    var eventHandler = function eventHandler(get_settings) {
+        if (!isGtmApplicable()) return;
+        var is_login = localStorage.getItem('GTM_login') === '1';
+        var is_new_account = localStorage.getItem('GTM_new_account') === '1';
+
+        localStorage.removeItem('GTM_login');
+        localStorage.removeItem('GTM_new_account');
+
+        var affiliate_token = Cookies.getJSON('affiliate_tracking');
+        if (affiliate_token) {
+            pushDataLayer({ bom_affiliate_token: affiliate_token.t });
+        }
+
+        var data = {
+            visitorId: ClientBase.get('loginid'),
+            bom_account_type: ClientBase.getAccountType(),
+            bom_currency: ClientBase.get('currency'),
+            bom_country: get_settings.country,
+            bom_country_abbrev: get_settings.country_code,
+            bom_email: get_settings.email,
+            url: window.location.href,
+            bom_today: Math.floor(Date.now() / 1000)
+        };
+        if (is_new_account) {
+            data.event = 'new_account';
+            data.bom_date_joined = data.bom_today;
+        }
+        if (!ClientBase.get('is_virtual')) {
+            data.bom_age = parseInt((moment().unix() - get_settings.date_of_birth) / 31557600);
+            data.bom_firstname = get_settings.first_name;
+            data.bom_lastname = get_settings.last_name;
+            data.bom_phone = get_settings.phone;
+        }
+
+        if (is_login) {
+            data.event = 'log_in';
+            BinarySocket.wait('mt5_login_list').then(function (response) {
+                (response.mt5_login_list || []).forEach(function (obj) {
+                    var acc_type = (ClientBase.getMT5AccountType(obj.group) || '').replace('real_vanuatu', 'financial').replace('vanuatu_', '').replace('costarica', 'gaming'); // i.e. financial_cent, demo_cent, demo_gaming, real_gaming
+                    if (acc_type) {
+                        data['mt5_' + acc_type + '_id'] = obj.login;
+                    }
+                });
+                pushDataLayer(data);
+            });
+        } else {
+            pushDataLayer(data);
+        }
+
+        // check if there are any transactions in the last 30 days for UX interview selection
+        BinarySocket.send({ statement: 1, limit: 1 }).then(function (response) {
+            var last_transaction_timestamp = getPropertyValue(response, ['statement', 'transactions', '0', 'transaction_time']);
+            pushDataLayer({
+                bom_transaction_in_last_30d: !!last_transaction_timestamp && moment(last_transaction_timestamp * 1000).isAfter(ServerTime.get().subtract(30, 'days'))
+            });
+        });
+    };
+
+    var pushPurchaseData = function pushPurchaseData(response) {
+        if (!isGtmApplicable() || ClientBase.get('is_virtual')) return;
+        var buy = response.buy;
+        if (!buy) return;
+        var req = response.echo_req.passthrough;
+        var data = {
+            event: 'buy_contract',
+            bom_symbol: req.symbol,
+            bom_market: getElementById('contract_markets').value,
+            bom_currency: req.currency,
+            bom_contract_type: req.contract_type,
+            bom_contract_id: buy.contract_id,
+            bom_transaction_id: buy.transaction_id,
+            bom_buy_price: buy.buy_price,
+            bom_payout: buy.payout
+        };
+        Object.assign(data, {
+            bom_amount: req.amount,
+            bom_basis: req.basis,
+            bom_expiry_type: getElementById('expiry_type').value
+        });
+        if (data.bom_expiry_type === 'duration') {
+            Object.assign(data, {
+                bom_duration: req.duration,
+                bom_duration_unit: req.duration_unit
+            });
+        }
+        if (isVisible(getElementById('barrier'))) {
+            data.bom_barrier = req.barrier;
+        } else if (isVisible(getElementById('barrier_high'))) {
+            data.bom_barrier_high = req.barrier;
+            data.bom_barrier_low = req.barrier2;
+        }
+        if (isVisible(getElementById('prediction'))) {
+            data.bom_prediction = req.barrier;
+        }
+
+        pushDataLayer(data);
+    };
+
+    var mt5NewAccount = function mt5NewAccount(response) {
+        var acc_type = response.mt5_new_account.mt5_account_type ? response.mt5_new_account.account_type + '_' + response.mt5_new_account.mt5_account_type : // financial_cent, demo_cent, ...
+        (response.mt5_new_account.account_type === 'demo' ? 'demo' : 'real') + '_gaming'; // demo_gaming, real_gaming
+
+        var gtm_data = {
+            event: 'mt5_new_account',
+            bom_email: ClientBase.get('email'),
+            bom_country: State.getResponse('get_settings.country'),
+            mt5_last_signup: acc_type
+        };
+
+        gtm_data['mt5_' + acc_type + '_id'] = response.mt5_new_account.login;
+
+        if (/demo/.test(acc_type) && !ClientBase.get('is_virtual')) {
+            gtm_data.visitorId = ClientBase.getAccountOfType('virtual').loginid;
+        }
+
+        pushDataLayer(gtm_data);
+    };
+
+    return {
+        pushDataLayer: pushDataLayer,
+        eventHandler: eventHandler,
+        pushPurchaseData: pushPurchaseData,
+        mt5NewAccount: mt5NewAccount,
+        setLoginFlag: function setLoginFlag() {
+            if (isGtmApplicable()) localStorage.setItem('GTM_login', '1');
+        }
+    };
+}();
+
+module.exports = GTM;
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var Client = __webpack_require__(87);
 var getLanguage = __webpack_require__(20).get;
 var isStorageSupported = __webpack_require__(6).isStorageSupported;
@@ -3009,7 +3188,7 @@ var Login = function () {
 module.exports = Login;
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3390,190 +3569,11 @@ var Validation = function () {
 module.exports = Validation;
 
 /***/ }),
-/* 53 */,
 /* 54 */,
 /* 55 */,
 /* 56 */,
 /* 57 */,
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var Cookies = __webpack_require__(56);
-var moment = __webpack_require__(9);
-var ClientBase = __webpack_require__(87);
-var Login = __webpack_require__(51);
-var ServerTime = __webpack_require__(162);
-var BinarySocket = __webpack_require__(59);
-var getElementById = __webpack_require__(3).getElementById;
-var isVisible = __webpack_require__(3).isVisible;
-var getLanguage = __webpack_require__(20).get;
-var State = __webpack_require__(6).State;
-var getPropertyValue = __webpack_require__(1).getPropertyValue;
-var getAppId = __webpack_require__(22).getAppId;
-
-var GTM = function () {
-    var isGtmApplicable = function isGtmApplicable() {
-        return (/^(1|1098|14473)$/.test(getAppId())
-        );
-    };
-
-    var getCommonVariables = function getCommonVariables() {
-        return _extends({
-            language: getLanguage(),
-            pageTitle: pageTitle(),
-            pjax: State.get('is_loaded_by_pjax'),
-            url: document.URL
-        }, ClientBase.isLoggedIn() && { visitorId: ClientBase.get('loginid') });
-    };
-
-    var pushDataLayer = function pushDataLayer(data) {
-        if (isGtmApplicable() && !Login.isLoginPages()) {
-            dataLayer.push(_extends({}, getCommonVariables(), data));
-        }
-    };
-
-    var pageTitle = function pageTitle() {
-        var t = /^.+[:-]\s*(.+)$/.exec(document.title);
-        return t && t[1] ? t[1] : document.title;
-    };
-
-    var eventHandler = function eventHandler(get_settings) {
-        if (!isGtmApplicable()) return;
-        var is_login = localStorage.getItem('GTM_login') === '1';
-        var is_new_account = localStorage.getItem('GTM_new_account') === '1';
-
-        localStorage.removeItem('GTM_login');
-        localStorage.removeItem('GTM_new_account');
-
-        var affiliate_token = Cookies.getJSON('affiliate_tracking');
-        if (affiliate_token) {
-            pushDataLayer({ bom_affiliate_token: affiliate_token.t });
-        }
-
-        var data = {
-            visitorId: ClientBase.get('loginid'),
-            bom_account_type: ClientBase.getAccountType(),
-            bom_currency: ClientBase.get('currency'),
-            bom_country: get_settings.country,
-            bom_country_abbrev: get_settings.country_code,
-            bom_email: get_settings.email,
-            url: window.location.href,
-            bom_today: Math.floor(Date.now() / 1000)
-        };
-        if (is_new_account) {
-            data.event = 'new_account';
-            data.bom_date_joined = data.bom_today;
-        }
-        if (!ClientBase.get('is_virtual')) {
-            data.bom_age = parseInt((moment().unix() - get_settings.date_of_birth) / 31557600);
-            data.bom_firstname = get_settings.first_name;
-            data.bom_lastname = get_settings.last_name;
-            data.bom_phone = get_settings.phone;
-        }
-
-        if (is_login) {
-            data.event = 'log_in';
-            BinarySocket.wait('mt5_login_list').then(function (response) {
-                (response.mt5_login_list || []).forEach(function (obj) {
-                    var acc_type = (ClientBase.getMT5AccountType(obj.group) || '').replace('real_vanuatu', 'financial').replace('vanuatu_', '').replace('costarica', 'gaming'); // i.e. financial_cent, demo_cent, demo_gaming, real_gaming
-                    if (acc_type) {
-                        data['mt5_' + acc_type + '_id'] = obj.login;
-                    }
-                });
-                pushDataLayer(data);
-            });
-        } else {
-            pushDataLayer(data);
-        }
-
-        // check if there are any transactions in the last 30 days for UX interview selection
-        BinarySocket.send({ statement: 1, limit: 1 }).then(function (response) {
-            var last_transaction_timestamp = getPropertyValue(response, ['statement', 'transactions', '0', 'transaction_time']);
-            pushDataLayer({
-                bom_transaction_in_last_30d: !!last_transaction_timestamp && moment(last_transaction_timestamp * 1000).isAfter(ServerTime.get().subtract(30, 'days'))
-            });
-        });
-    };
-
-    var pushPurchaseData = function pushPurchaseData(response) {
-        if (!isGtmApplicable() || ClientBase.get('is_virtual')) return;
-        var buy = response.buy;
-        if (!buy) return;
-        var req = response.echo_req.passthrough;
-        var data = {
-            event: 'buy_contract',
-            bom_symbol: req.symbol,
-            bom_market: getElementById('contract_markets').value,
-            bom_currency: req.currency,
-            bom_contract_type: req.contract_type,
-            bom_contract_id: buy.contract_id,
-            bom_transaction_id: buy.transaction_id,
-            bom_buy_price: buy.buy_price,
-            bom_payout: buy.payout
-        };
-        Object.assign(data, {
-            bom_amount: req.amount,
-            bom_basis: req.basis,
-            bom_expiry_type: getElementById('expiry_type').value
-        });
-        if (data.bom_expiry_type === 'duration') {
-            Object.assign(data, {
-                bom_duration: req.duration,
-                bom_duration_unit: req.duration_unit
-            });
-        }
-        if (isVisible(getElementById('barrier'))) {
-            data.bom_barrier = req.barrier;
-        } else if (isVisible(getElementById('barrier_high'))) {
-            data.bom_barrier_high = req.barrier;
-            data.bom_barrier_low = req.barrier2;
-        }
-        if (isVisible(getElementById('prediction'))) {
-            data.bom_prediction = req.barrier;
-        }
-
-        pushDataLayer(data);
-    };
-
-    var mt5NewAccount = function mt5NewAccount(response) {
-        var acc_type = response.mt5_new_account.mt5_account_type ? response.mt5_new_account.account_type + '_' + response.mt5_new_account.mt5_account_type : // financial_cent, demo_cent, ...
-        (response.mt5_new_account.account_type === 'demo' ? 'demo' : 'real') + '_gaming'; // demo_gaming, real_gaming
-
-        var gtm_data = {
-            event: 'mt5_new_account',
-            bom_email: ClientBase.get('email'),
-            bom_country: State.getResponse('get_settings.country'),
-            mt5_last_signup: acc_type
-        };
-
-        gtm_data['mt5_' + acc_type + '_id'] = response.mt5_new_account.login;
-
-        if (/demo/.test(acc_type) && !ClientBase.get('is_virtual')) {
-            gtm_data.visitorId = ClientBase.getAccountOfType('virtual').loginid;
-        }
-
-        pushDataLayer(gtm_data);
-    };
-
-    return {
-        pushDataLayer: pushDataLayer,
-        eventHandler: eventHandler,
-        pushPurchaseData: pushPurchaseData,
-        mt5NewAccount: mt5NewAccount,
-        setLoginFlag: function setLoginFlag() {
-            if (isGtmApplicable()) localStorage.setItem('GTM_login', '1');
-        }
-    };
-}();
-
-module.exports = GTM;
-
-/***/ }),
+/* 58 */,
 /* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8701,7 +8701,7 @@ module.exports = {
 
 
 var SelectMatcher = __webpack_require__(25).select2Matcher;
-var Cookies = __webpack_require__(56);
+var Cookies = __webpack_require__(57);
 var generateBirthDate = __webpack_require__(169);
 var FormManager = __webpack_require__(16);
 var BinaryPjax = __webpack_require__(14);
@@ -9022,7 +9022,7 @@ module.exports = FlexTableUI;
 "use strict";
 
 
-var Validation = __webpack_require__(52);
+var Validation = __webpack_require__(53);
 var getElementById = __webpack_require__(3).getElementById;
 var createElement = __webpack_require__(1).createElement;
 
@@ -9093,7 +9093,7 @@ var ViewPopup = __webpack_require__(93);
 var Client = __webpack_require__(5);
 var BinarySocket = __webpack_require__(4);
 var formatMoney = __webpack_require__(7).formatMoney;
-var GTM = __webpack_require__(58);
+var GTM = __webpack_require__(51);
 var localize = __webpack_require__(2).localize;
 var isEmptyObject = __webpack_require__(1).isEmptyObject;
 
@@ -11349,7 +11349,7 @@ var MetaTraderConfig = __webpack_require__(185);
 var MetaTraderUI = __webpack_require__(323);
 var Client = __webpack_require__(5);
 var BinarySocket = __webpack_require__(4);
-var Validation = __webpack_require__(52);
+var Validation = __webpack_require__(53);
 var localize = __webpack_require__(2).localize;
 var State = __webpack_require__(6).State;
 var getPropertyValue = __webpack_require__(1).getPropertyValue;
@@ -11916,6 +11916,7 @@ module.exports = ViewPopupUI;
 
 
 var ClientBase = __webpack_require__(87);
+var GTM = __webpack_require__(51);
 var BinarySocket = __webpack_require__(59);
 var State = __webpack_require__(6).State;
 var createElement = __webpack_require__(1).createElement;
@@ -11931,6 +11932,7 @@ var Elevio = function () {
                     // window._elev.setLanguage(lang);
                     setUserInfo(elev);
                     setTranslations(elev);
+                    addEventListenerGTM();
                     makeLauncherVisible();
                 });
             }
@@ -11939,6 +11941,13 @@ var Elevio = function () {
 
     var isAvailable = function isAvailable() {
         return new RegExp('^(' + available_countries.join('|') + ')$', 'i').test(State.getResponse('website_status.clients_country'));
+    };
+
+    var addEventListenerGTM = function addEventListenerGTM() {
+        window._elev.on('widget:opened', function () {
+            // eslint-disable-line no-underscore-dangle
+            GTM.pushDataLayer({ event: 'elevio_widget_opened' });
+        });
     };
 
     var makeLauncherVisible = function makeLauncherVisible() {
@@ -14873,8 +14882,8 @@ var Client = __webpack_require__(5);
 var BinarySocket = __webpack_require__(4);
 var Dialog = __webpack_require__(77);
 var Currency = __webpack_require__(7);
-var Validation = __webpack_require__(52);
-var GTM = __webpack_require__(58);
+var Validation = __webpack_require__(53);
+var GTM = __webpack_require__(51);
 var localize = __webpack_require__(2).localize;
 var State = __webpack_require__(6).State;
 var urlFor = __webpack_require__(8).urlFor;
@@ -15872,7 +15881,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     // performance/minified-size optimization
     (function (factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(57)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(58)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -18858,8 +18867,8 @@ var NetworkMonitor = __webpack_require__(262);
 var Page = __webpack_require__(263);
 var BinarySocket = __webpack_require__(4);
 var ContentVisibility = __webpack_require__(267);
-var GTM = __webpack_require__(58);
-var Login = __webpack_require__(51);
+var GTM = __webpack_require__(51);
+var Login = __webpack_require__(52);
 var getElementById = __webpack_require__(3).getElementById;
 var urlLang = __webpack_require__(20).urlLang;
 var localizeForLang = __webpack_require__(2).forLang;
@@ -19488,7 +19497,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // https://github.com/xbsoftware/enjoyhint
 // (+ some custom changes for binary.com)
 
-var $ = __webpack_require__(57);
+var $ = __webpack_require__(58);
 var Kinetic = __webpack_require__(557);
 
 module.exports = function (_options) {
@@ -21396,11 +21405,11 @@ module.exports = Contents;
 "use strict";
 
 
-var Cookies = __webpack_require__(56);
+var Cookies = __webpack_require__(57);
 var moment = __webpack_require__(9);
 var Client = __webpack_require__(5);
 var BinarySocket = __webpack_require__(4);
-var GTM = __webpack_require__(58);
+var GTM = __webpack_require__(51);
 var SocketCache = __webpack_require__(76);
 var getElementById = __webpack_require__(3).getElementById;
 var getLanguage = __webpack_require__(20).get;
@@ -21632,7 +21641,7 @@ module.exports = NetworkMonitor;
 "use strict";
 
 
-var Cookies = __webpack_require__(56);
+var Cookies = __webpack_require__(57);
 var Client = __webpack_require__(5);
 var Contents = __webpack_require__(259);
 var Header = __webpack_require__(27);
@@ -21642,7 +21651,7 @@ var BinarySocket = __webpack_require__(4);
 var TrafficSource = __webpack_require__(173);
 var RealityCheck = __webpack_require__(329);
 var Elevio = __webpack_require__(161);
-var Login = __webpack_require__(51);
+var Login = __webpack_require__(52);
 var elementInnerHtml = __webpack_require__(3).elementInnerHtml;
 var getElementById = __webpack_require__(3).getElementById;
 var Crowdin = __webpack_require__(163);
@@ -21859,8 +21868,8 @@ var setCurrencies = __webpack_require__(7).setCurrencies;
 var SessionDurationLimit = __webpack_require__(269);
 var updateBalance = __webpack_require__(334);
 var Crowdin = __webpack_require__(163);
-var GTM = __webpack_require__(58);
-var Login = __webpack_require__(51);
+var GTM = __webpack_require__(51);
+var Login = __webpack_require__(52);
 var localize = __webpack_require__(2).localize;
 var State = __webpack_require__(6).State;
 var urlFor = __webpack_require__(8).urlFor;
@@ -22260,7 +22269,7 @@ module.exports = ContentVisibility;
 "use strict";
 
 
-var Cookies = __webpack_require__(56);
+var Cookies = __webpack_require__(57);
 var EnjoyHint = __webpack_require__(251);
 var localize = __webpack_require__(2).localize;
 
@@ -22821,7 +22830,7 @@ var BinarySocket = __webpack_require__(4);
 var showPopup = __webpack_require__(124);
 var Currency = __webpack_require__(7);
 var FormManager = __webpack_require__(16);
-var validEmailToken = __webpack_require__(52).validEmailToken;
+var validEmailToken = __webpack_require__(53).validEmailToken;
 var handleVerifyCode = __webpack_require__(98).handleVerifyCode;
 var getElementById = __webpack_require__(3).getElementById;
 var localize = __webpack_require__(2).localize;
@@ -23228,7 +23237,7 @@ var BinarySocket = __webpack_require__(4);
 var getDecimalPlaces = __webpack_require__(7).getDecimalPlaces;
 var getPaWithdrawalLimit = __webpack_require__(7).getPaWithdrawalLimit;
 var FormManager = __webpack_require__(16);
-var validEmailToken = __webpack_require__(52).validEmailToken;
+var validEmailToken = __webpack_require__(53).validEmailToken;
 var handleVerifyCode = __webpack_require__(98).handleVerifyCode;
 var localize = __webpack_require__(2).localize;
 var Url = __webpack_require__(8);
@@ -23887,7 +23896,7 @@ var BinaryPjax = __webpack_require__(14);
 var BinarySocket = __webpack_require__(4);
 var isEuCountry = __webpack_require__(60).isEuCountry;
 var FormManager = __webpack_require__(16);
-var Login = __webpack_require__(51);
+var Login = __webpack_require__(52);
 var getElementById = __webpack_require__(3).getElementById;
 var localize = __webpack_require__(2).localize;
 var State = __webpack_require__(6).State;
@@ -25964,7 +25973,7 @@ var getDecimalPlaces = __webpack_require__(7).getDecimalPlaces;
 var isCryptocurrency = __webpack_require__(7).isCryptocurrency;
 var onlyNumericOnKeypress = __webpack_require__(172);
 var TimePicker = __webpack_require__(174);
-var GTM = __webpack_require__(58);
+var GTM = __webpack_require__(51);
 var dateValueChanged = __webpack_require__(3).dateValueChanged;
 var isVisible = __webpack_require__(3).isVisible;
 var getElementById = __webpack_require__(3).getElementById;
@@ -28707,7 +28716,7 @@ module.exports = AuthorisedApps;
 var Client = __webpack_require__(5);
 var Header = __webpack_require__(27);
 var BinarySocket = __webpack_require__(4);
-var Validation = __webpack_require__(52);
+var Validation = __webpack_require__(53);
 var getElementById = __webpack_require__(3).getElementById;
 var isVisible = __webpack_require__(3).isVisible;
 var localize = __webpack_require__(2).localize;
@@ -30516,7 +30525,7 @@ module.exports = LostPassword;
 var MetaTraderConfig = __webpack_require__(185);
 var Client = __webpack_require__(5);
 var formatMoney = __webpack_require__(7).formatMoney;
-var Validation = __webpack_require__(52);
+var Validation = __webpack_require__(53);
 var localize = __webpack_require__(2).localize;
 var State = __webpack_require__(6).State;
 var urlForStatic = __webpack_require__(8).urlForStatic;
@@ -31366,7 +31375,7 @@ module.exports = RealAccOpening;
 
 
 var SelectMatcher = __webpack_require__(25).select2Matcher;
-var Cookies = __webpack_require__(56);
+var Cookies = __webpack_require__(57);
 var Client = __webpack_require__(5);
 var BinarySocket = __webpack_require__(4);
 var FormManager = __webpack_require__(16);
@@ -31791,7 +31800,7 @@ module.exports = RealityCheckUI;
 
 var generateBirthDate = __webpack_require__(169);
 var FormManager = __webpack_require__(16);
-var Login = __webpack_require__(51);
+var Login = __webpack_require__(52);
 var localize = __webpack_require__(2).localize;
 
 var ResetPassword = function () {
@@ -32098,7 +32107,7 @@ module.exports = VideoFacility;
 "use strict";
 
 
-window.$ = window.jQuery = __webpack_require__(57);
+window.$ = window.jQuery = __webpack_require__(58);
 
 __webpack_require__(240);
 __webpack_require__(243);
@@ -32272,7 +32281,7 @@ module.exports = {
 "use strict";
 
 
-var Login = __webpack_require__(51);
+var Login = __webpack_require__(52);
 var localize = __webpack_require__(2).localize;
 var State = __webpack_require__(6).State;
 var TabSelector = __webpack_require__(89);
