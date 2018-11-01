@@ -263,6 +263,9 @@ label {
 .no-margin {
   margin: 0 !important; }
 
+.full-height {
+  height: 100%; }
+
 .errorfield {
   margin-top: 8px;
   color: #c03; }
