@@ -1408,8 +1408,7 @@ module.exports = FormManager;
  */
 var domain_app_ids = { // these domains also being used in '_common/url.js' as supported "production domains"
     'binary.com': 1,
-    'binary.me': 15284,
-    'binary.ws': 1097
+    'binary.me': 15284
 };
 
 var getCurrentBinaryDomain = function getCurrentBinaryDomain() {
@@ -27455,6 +27454,7 @@ var BinarySocket = __webpack_require__(4);
 var CompressImage = __webpack_require__(123).compressImg;
 var ConvertToBase64 = __webpack_require__(123).convertToBase64;
 var isImageType = __webpack_require__(123).isImageType;
+var getLanguage = __webpack_require__(21).get;
 var localize = __webpack_require__(2).localize;
 var toTitleCase = __webpack_require__(23).toTitleCase;
 var Url = __webpack_require__(7);
@@ -27478,11 +27478,14 @@ var Authenticate = function () {
                 is_action_needed = /document_needs_action/.test(response.get_account_status.status);
                 if (!/authenticated/.test(status)) {
                     init();
-                    var $not_authenticated = $('#not_authenticated').setVisibility(1);
-                    var link = Url.urlForCurrentDomain('https://marketing.binary.com/authentication/2017_Authentication_Process.pdf');
+                    var language = getLanguage();
+                    var language_based_link = ['ID', 'RU', 'PT'].includes(language) ? '_' + language : '';
+                    var $not_authenticated = $('#not_authenticated');
+                    $not_authenticated.setVisibility(1);
+                    var link = Url.urlForCurrentDomain('https://marketing.binary.com/authentication/Authentication_Process' + language_based_link + '.pdf');
                     if (Client.isAccountOfType('financial')) {
                         $('#not_authenticated_financial').setVisibility(1);
-                        link = Url.urlForCurrentDomain('https://marketing.binary.com/authentication/2017_MF_Authentication_Process.pdf');
+                        link = Url.urlForCurrentDomain('https://marketing.binary.com/authentication/MF_Authentication_Process.pdf');
                     }
                     $not_authenticated.find('.learn_more').setVisibility(1).find('a').attr('href', link);
                 } else if (!/age_verification/.test(status)) {
