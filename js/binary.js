@@ -1408,7 +1408,8 @@ module.exports = FormManager;
  */
 var domain_app_ids = { // these domains also being used in '_common/url.js' as supported "production domains"
     'binary.com': 1,
-    'binary.me': 15284
+    'binary.me': 15284,
+    'binary.sx': 1097
 };
 
 var getCurrentBinaryDomain = function getCurrentBinaryDomain() {
