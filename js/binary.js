@@ -869,8 +869,9 @@ var Url = function () {
     };
 
     var default_domain = 'binary.com';
-    var host_map = {
-        'bot.binary.com': 'www.binary.bot'
+    var host_map = { // the exceptions regarding updating the URLs
+        'bot.binary.com': 'www.binary.bot',
+        'developers.binary.com': 'developers.binary.com' // same, shouldn't change
     };
 
     var urlForCurrentDomain = function urlForCurrentDomain(href) {
