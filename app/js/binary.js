@@ -222,19 +222,13 @@ var _client_base = __webpack_require__(/*! ../../../../../_common/base/client_ba
 
 var _client_base2 = _interopRequireDefault(_client_base);
 
-var _gtm = __webpack_require__(/*! ../../../../../_common/base/gtm */ "./src/javascript/_common/base/gtm.js");
-
-var _gtm2 = _interopRequireDefault(_gtm);
-
-var _socket_cache = __webpack_require__(/*! ../../../../../_common/base/socket_cache */ "./src/javascript/_common/base/socket_cache.js");
-
-var _socket_cache2 = _interopRequireDefault(_socket_cache);
-
 var _localize = __webpack_require__(/*! ../../../../../_common/localize */ "./src/javascript/_common/localize.js");
 
 var _Drawer = __webpack_require__(/*! ../../../../Assets/Header/Drawer */ "./src/javascript/app_2/Assets/Header/Drawer/index.js");
 
 var _Services = __webpack_require__(/*! ../../../../Services */ "./src/javascript/app_2/Services/index.js");
+
+var _switch_account = __webpack_require__(/*! ../../../../Services/Helpers/switch_account */ "./src/javascript/app_2/Services/Helpers/switch_account.js");
 
 var _upgrade_button = __webpack_require__(/*! ./upgrade_button.jsx */ "./src/javascript/app_2/App/Components/Elements/AccountSwitcher/upgrade_button.jsx");
 
@@ -279,21 +273,6 @@ var AccountSwitcher = function (_React$Component) {
             _this.wrapper_ref = node;
         };
 
-        _this.switchAccount = function (loginid) {
-            if (!loginid || !_client_base2.default.get('token', loginid)) {
-                return;
-            }
-            sessionStorage.setItem('active_tab', '1');
-            // set local storage
-            _this.props.toggle();
-            _gtm2.default.setLoginFlag();
-            _client_base2.default.set('cashier_confirmed', 0);
-            _client_base2.default.set('accepted_bch', 0);
-            _client_base2.default.set('loginid', loginid);
-            _socket_cache2.default.clear();
-            window.location.reload();
-        };
-
         _this.handleClickOutside = function (event) {
             var accounts_toggle_btn = !event.target.classList.contains('acc-info');
             if (_this.wrapper_ref && !_this.wrapper_ref.contains(event.target) && _this.props.is_visible && accounts_toggle_btn) {
@@ -318,6 +297,12 @@ var AccountSwitcher = function (_React$Component) {
             document.removeEventListener('mousedown', this.handleClickOutside);
         }
     }, {
+        key: 'doSwitch',
+        value: function doSwitch(loginid) {
+            this.props.toggle();
+            (0, _switch_account.switchAccount)(loginid);
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this2 = this;
@@ -335,7 +320,9 @@ var AccountSwitcher = function (_React$Component) {
                             'div',
                             {
                                 className: (0, _classnames2.default)('acc-switcher-account', account.icon),
-                                onClick: _this2.switchAccount.bind(null, account.loginid)
+                                onClick: function onClick() {
+                                    return _this2.doSwitch(account.loginid);
+                                }
                             },
                             _react2.default.createElement(
                                 'span',
@@ -1865,6 +1852,104 @@ exports.default = TableRow;
 
 /***/ }),
 
+/***/ "./src/javascript/app_2/App/Components/Elements/DenialOfServiceModal/denial_of_service.jsx":
+/*!*************************************************************************************************!*\
+  !*** ./src/javascript/app_2/App/Components/Elements/DenialOfServiceModal/denial_of_service.jsx ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _client_base = __webpack_require__(/*! ../../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
+
+var _localize = __webpack_require__(/*! ../../../../../_common/localize */ "./src/javascript/_common/localize.js");
+
+var _url = __webpack_require__(/*! ../../../../../_common/url */ "./src/javascript/_common/url.js");
+
+var _url2 = _interopRequireDefault(_url);
+
+var _full_page_modal = __webpack_require__(/*! ../FullPageModal/full_page_modal.jsx */ "./src/javascript/app_2/App/Components/Elements/FullPageModal/full_page_modal.jsx");
+
+var _full_page_modal2 = _interopRequireDefault(_full_page_modal);
+
+var _localize2 = __webpack_require__(/*! ../localize.jsx */ "./src/javascript/app_2/App/Components/Elements/localize.jsx");
+
+var _localize3 = _interopRequireDefault(_localize2);
+
+var _switch_account = __webpack_require__(/*! ../../../../Services/Helpers/switch_account */ "./src/javascript/app_2/Services/Helpers/switch_account.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var onConfirm = function onConfirm() {
+    (0, _switch_account.switchAccount)((0, _client_base.getAccountOfType)('virtual').loginid);
+};
+
+var onCancel = function onCancel() {
+    window.location.href = _url2.default.urlFor('trading');
+};
+
+var DenialOfServiceModal = function DenialOfServiceModal(_ref) {
+    var is_visible = _ref.is_visible;
+    return _react2.default.createElement(
+        _full_page_modal2.default,
+        {
+            title: (0, _localize.localize)('Whoops!'),
+            confirm_button_text: (0, _localize.localize)('Continue with my virtual account'),
+            cancel_button_text: (0, _localize.localize)('Visit main website'),
+            onConfirm: onConfirm,
+            onCancel: onCancel,
+            is_visible: is_visible
+        },
+        _react2.default.createElement(_localize3.default, { str: 'You are not allowed to access this feature with your real money account at the moment.' })
+    );
+};
+
+DenialOfServiceModal.propTypes = {
+    is_visible: _propTypes2.default.bool
+};
+exports.default = DenialOfServiceModal;
+
+/***/ }),
+
+/***/ "./src/javascript/app_2/App/Components/Elements/DenialOfServiceModal/index.js":
+/*!************************************************************************************!*\
+  !*** ./src/javascript/app_2/App/Components/Elements/DenialOfServiceModal/index.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _denial_of_service = __webpack_require__(/*! ./denial_of_service.jsx */ "./src/javascript/app_2/App/Components/Elements/DenialOfServiceModal/denial_of_service.jsx");
+
+var _denial_of_service2 = _interopRequireDefault(_denial_of_service);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _denial_of_service2.default;
+
+/***/ }),
+
 /***/ "./src/javascript/app_2/App/Components/Elements/Drawer/drawer.jsx":
 /*!************************************************************************!*\
   !*** ./src/javascript/app_2/App/Components/Elements/Drawer/drawer.jsx ***!
@@ -2768,6 +2853,105 @@ var _error_component2 = _interopRequireDefault(_error_component);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _error_component2.default;
+
+/***/ }),
+
+/***/ "./src/javascript/app_2/App/Components/Elements/FullPageModal/full_page_modal.jsx":
+/*!****************************************************************************************!*\
+  !*** ./src/javascript/app_2/App/Components/Elements/FullPageModal/full_page_modal.jsx ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var FullPageModal = function FullPageModal(_ref) {
+    var cancel_button_text = _ref.cancel_button_text,
+        children = _ref.children,
+        confirm_button_text = _ref.confirm_button_text,
+        onConfirm = _ref.onConfirm,
+        onCancel = _ref.onCancel,
+        is_visible = _ref.is_visible,
+        title = _ref.title;
+
+    if (is_visible) {
+        return _react2.default.createElement(
+            'div',
+            { className: 'full-page-modal' },
+            _react2.default.createElement(
+                'div',
+                { className: 'modal-dialog' },
+                _react2.default.createElement(
+                    'h1',
+                    null,
+                    title
+                ),
+                _react2.default.createElement(
+                    'p',
+                    null,
+                    children
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'modal-footer' },
+                    _react2.default.createElement(
+                        'div',
+                        {
+                            className: 'btn flat effect primary',
+                            onClick: onCancel
+                        },
+                        _react2.default.createElement(
+                            'span',
+                            null,
+                            cancel_button_text
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        {
+                            className: 'btn flat effect primary',
+                            onClick: onConfirm
+                        },
+                        _react2.default.createElement(
+                            'span',
+                            null,
+                            confirm_button_text
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    return _react2.default.createElement(_react2.default.Fragment, null);
+};
+
+FullPageModal.propTypes = {
+    body: _propTypes2.default.string,
+    cancel_button_text: _propTypes2.default.string,
+    confirm_button_text: _propTypes2.default.string,
+    is_visible: _propTypes2.default.bool,
+    onCancel: _propTypes2.default.func,
+    onConfirm: _propTypes2.default.func,
+    title: _propTypes2.default.string
+};
+
+exports.default = FullPageModal;
 
 /***/ }),
 
@@ -5219,80 +5403,10 @@ exports.default = _date_picker2.default;
 
 /***/ }),
 
-/***/ "./src/javascript/app_2/App/Components/Form/button.jsx":
-/*!*************************************************************!*\
-  !*** ./src/javascript/app_2/App/Components/Form/button.jsx ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Button = function Button(_ref) {
-    var children = _ref.children,
-        _ref$className = _ref.className,
-        className = _ref$className === undefined ? '' : _ref$className,
-        has_effect = _ref.has_effect,
-        id = _ref.id,
-        is_disabled = _ref.is_disabled,
-        onClick = _ref.onClick,
-        text = _ref.text,
-        wrapperClassName = _ref.wrapperClassName;
-
-    var classes = 'btn' + (has_effect ? ' effect' : '') + ' ' + className;
-    var button = _react2.default.createElement(
-        'button',
-        { id: id, className: classes, onClick: onClick || undefined, disabled: is_disabled },
-        _react2.default.createElement(
-            'span',
-            null,
-            text
-        ),
-        children
-    );
-    var wrapper = _react2.default.createElement(
-        'div',
-        { className: wrapperClassName },
-        button
-    );
-
-    return wrapperClassName ? wrapper : button;
-};
-
-Button.propTypes = {
-    children: _propTypes2.default.object,
-    className: _propTypes2.default.string,
-    has_effect: _propTypes2.default.bool,
-    id: _propTypes2.default.string,
-    is_disabled: _propTypes2.default.bool,
-    onClick: _propTypes2.default.func,
-    text: _propTypes2.default.string,
-    wrapperClassName: _propTypes2.default.string
-};
-
-exports.default = Button;
-
-/***/ }),
-
-/***/ "./src/javascript/app_2/App/Components/Form/dropdown.jsx":
-/*!***************************************************************!*\
-  !*** ./src/javascript/app_2/App/Components/Form/dropdown.jsx ***!
-  \***************************************************************/
+/***/ "./src/javascript/app_2/App/Components/Form/DropDown/dropdown.jsx":
+/*!************************************************************************!*\
+  !*** ./src/javascript/app_2/App/Components/Form/DropDown/dropdown.jsx ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5323,7 +5437,9 @@ var _simplebarReact = __webpack_require__(/*! simplebar-react */ "./node_modules
 
 var _simplebarReact2 = _interopRequireDefault(_simplebarReact);
 
-var _Common = __webpack_require__(/*! ../../../Assets/Common */ "./src/javascript/app_2/Assets/Common/index.js");
+var _Common = __webpack_require__(/*! ../../../../Assets/Common */ "./src/javascript/app_2/Assets/Common/index.js");
+
+var _helpers = __webpack_require__(/*! ./helpers */ "./src/javascript/app_2/App/Components/Form/DropDown/helpers.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5341,22 +5457,64 @@ var Dropdown = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).call(this, props));
 
-        _this.getDisplayText = function (list, value) {
-            var findInArray = function findInArray(arr_list) {
-                return (arr_list.find(function (item) {
-                    return item.value === (typeof item.value === 'number' ? +value : value);
-                }) || {}).text;
-            };
-            var text = '';
-            if ((0, _mobx.isArrayLike)(list)) {
-                text = findInArray(list);
-            } else {
-                Object.keys(list).some(function (key) {
-                    text = findInArray(list[key]);
-                    return text;
-                });
+        _this.onKeyPressed = function (event) {
+            if (event.keyCode === 9) {
+                // Tab is pressed
+                if (_this.state.is_list_visible) {
+                    _this.handleVisibility();
+                }
+                return;
             }
-            return text;
+            event.preventDefault();
+            var index = (0, _helpers.getItemFromValue)(_this.props.list, _this.props.value);
+            var value = (0, _helpers.getValueFromIndex)(_this.props.list, _this.state.curr_index);
+            var handleToggle = function handleToggle() {
+                if (_this.state.is_list_visible && _this.props.value !== value) {
+                    _this.props.onChange({ target: { name: _this.props.name, value: value } });
+                }
+                _this.handleVisibility();
+            };
+            switch (event.keyCode) {
+                case 13: // Enter is pressed
+                case 32:
+                    // Space is pressed
+                    handleToggle();
+                    break;
+                case 38:
+                    // Up Arrow is pressed
+                    if (_this.state.is_list_visible) {
+                        var prev_index = (0, _helpers.getPrevIndex)(_this.state.curr_index, index.length);
+                        _this.setState({ curr_index: prev_index });
+                    }
+                    break;
+                case 40:
+                    // Down Arrow is pressed
+                    if (_this.state.is_list_visible) {
+                        var next_index = (0, _helpers.getNextIndex)(_this.state.curr_index, index.length);
+                        _this.setState({ curr_index: next_index });
+                    }
+                    break;
+                default:
+            }
+
+            // For char presses, we do a search for the item:
+            if (event.key.length === 1) {
+                var char = event.key.toLowerCase();
+                var firstChars = _this.props.list.map(function (x) {
+                    return x.text[0].toLowerCase();
+                });
+                var idx = void 0;
+                // Tapping the same character again jumps to the next match:
+                if (_this.state.curr_index) {
+                    idx = firstChars.indexOf(char, _this.state.curr_index + 1);
+                }
+                if (idx === undefined || idx === -1) {
+                    idx = firstChars.indexOf(char);
+                }
+                if (idx >= 0) {
+                    _this.setState({ curr_index: idx });
+                }
+            }
         };
 
         _this.handleVisibility = _this.handleVisibility.bind(_this);
@@ -5364,7 +5522,8 @@ var Dropdown = function (_React$Component) {
         _this.setWrapperRef = _this.setWrapperRef.bind(_this);
         _this.handleClickOutside = _this.handleClickOutside.bind(_this);
         _this.state = {
-            is_list_visible: false
+            is_list_visible: false,
+            curr_index: (0, _helpers.getItemFromValue)(_this.props.list, _this.props.value).number
         };
         return _this;
     }
@@ -5440,12 +5599,13 @@ var Dropdown = function (_React$Component) {
                     {
                         className: 'dropdown-display ' + (this.state.is_list_visible ? 'clicked' : ''),
                         onClick: this.handleVisibility,
-                        onBlur: this.handleVisibility
+                        tabIndex: '0',
+                        onKeyDown: this.onKeyPressed
                     },
                     _react2.default.createElement(
                         'span',
                         { name: this.props.name, value: this.props.value },
-                        this.getDisplayText(this.props.list, this.props.value)
+                        (0, _helpers.getDisplayText)(this.props.list, this.props.value)
                     )
                 ),
                 _react2.default.createElement(_Common.IconArrow, { className: 'select-arrow' }),
@@ -5467,6 +5627,7 @@ var Dropdown = function (_React$Component) {
                                 _simplebarReact2.default,
                                 { style: { 'height': '100%' } },
                                 (0, _mobx.isArrayLike)(this.props.list) ? _react2.default.createElement(Items, {
+                                    highlightedIdx: this.state.curr_index,
                                     items: this.props.list,
                                     name: this.props.name,
                                     value: this.props.value,
@@ -5485,6 +5646,7 @@ var Dropdown = function (_React$Component) {
                                             )
                                         ),
                                         _react2.default.createElement(Items, {
+                                            highlightedIdx: _this2.state.curr_index,
                                             items: _this2.props.list[key],
                                             name: _this2.props.name,
                                             value: _this2.props.value,
@@ -5507,7 +5669,8 @@ var Items = function Items(_ref) {
     var items = _ref.items,
         name = _ref.name,
         value = _ref.value,
-        handleSelect = _ref.handleSelect;
+        handleSelect = _ref.handleSelect,
+        highlightedIdx = _ref.highlightedIdx;
     return items.map(function (item, idx) {
         return _react2.default.createElement(
             _react2.default.Fragment,
@@ -5515,7 +5678,7 @@ var Items = function Items(_ref) {
             _react2.default.createElement(
                 'div',
                 {
-                    className: 'list-item ' + (value === item.value ? 'selected' : ''),
+                    className: 'list-item ' + (value === item.value ? 'selected' : '') + ' ' + (highlightedIdx === idx ? 'highlighted' : ''),
                     key: idx,
                     name: name,
                     value: item.value,
@@ -5590,6 +5753,182 @@ NativeSelect.propTypes = {
 };
 
 exports.default = (0, _mobxReact.observer)(Dropdown);
+
+/***/ }),
+
+/***/ "./src/javascript/app_2/App/Components/Form/DropDown/helpers.js":
+/*!**********************************************************************!*\
+  !*** ./src/javascript/app_2/App/Components/Form/DropDown/helpers.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.getNextIndex = exports.getPrevIndex = exports.getValueFromIndex = exports.getItemFromValue = exports.getDisplayText = undefined;
+
+var _mobx = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
+
+var getDisplayText = exports.getDisplayText = function getDisplayText(list, value) {
+    var findInArray = function findInArray(arr_list) {
+        return (arr_list.find(function (item) {
+            return item.value === value;
+        }) || {}).text;
+    };
+    var text = '';
+    if ((0, _mobx.isArrayLike)(list)) {
+        text = findInArray(list);
+    } else {
+        Object.keys(list).some(function (key) {
+            text = findInArray(list[key]);
+            return text;
+        });
+    }
+    return text;
+};
+
+var getItemFromValue = exports.getItemFromValue = function getItemFromValue(list, value) {
+    var findInArray = function findInArray(arr_list) {
+        return arr_list.findIndex(function (item) {
+            return item.value === value;
+        });
+    };
+    var item = {};
+    if ((0, _mobx.isArrayLike)(list)) {
+        item = { number: findInArray(list), length: list.length };
+    } else {
+        Object.keys(list).some(function (key) {
+            item = { number: findInArray(list[key]), length: list[key].length };
+            return item;
+        });
+    }
+    return item;
+};
+
+var getValueFromIndex = exports.getValueFromIndex = function getValueFromIndex(list, index) {
+    var findInArray = function findInArray(arr_list) {
+        return arr_list[index];
+    };
+    var result = void 0;
+    if ((0, _mobx.isArrayLike)(list)) {
+        result = findInArray(list);
+    } else {
+        Object.keys(list).some(function (key) {
+            result = findInArray(list[key]);
+            return result.value;
+        });
+    }
+    return result.value;
+};
+
+var getPrevIndex = exports.getPrevIndex = function getPrevIndex(index, length) {
+    var prev_index = index - 1 < 0 ? length - 1 : index - 1;
+    return prev_index;
+};
+
+var getNextIndex = exports.getNextIndex = function getNextIndex(index, length) {
+    var next_index = index + 1 === length ? 0 : index + 1;
+    return next_index;
+};
+
+/***/ }),
+
+/***/ "./src/javascript/app_2/App/Components/Form/DropDown/index.js":
+/*!********************************************************************!*\
+  !*** ./src/javascript/app_2/App/Components/Form/DropDown/index.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _dropdown = __webpack_require__(/*! ./dropdown.jsx */ "./src/javascript/app_2/App/Components/Form/DropDown/dropdown.jsx");
+
+var _dropdown2 = _interopRequireDefault(_dropdown);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _dropdown2.default;
+
+/***/ }),
+
+/***/ "./src/javascript/app_2/App/Components/Form/button.jsx":
+/*!*************************************************************!*\
+  !*** ./src/javascript/app_2/App/Components/Form/button.jsx ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Button = function Button(_ref) {
+    var children = _ref.children,
+        _ref$className = _ref.className,
+        className = _ref$className === undefined ? '' : _ref$className,
+        has_effect = _ref.has_effect,
+        id = _ref.id,
+        is_disabled = _ref.is_disabled,
+        onClick = _ref.onClick,
+        text = _ref.text,
+        wrapperClassName = _ref.wrapperClassName;
+
+    var classes = 'btn' + (has_effect ? ' effect' : '') + ' ' + className;
+    var button = _react2.default.createElement(
+        'button',
+        { id: id, className: classes, onClick: onClick || undefined, disabled: is_disabled },
+        _react2.default.createElement(
+            'span',
+            null,
+            text
+        ),
+        children
+    );
+    var wrapper = _react2.default.createElement(
+        'div',
+        { className: wrapperClassName },
+        button
+    );
+
+    return wrapperClassName ? wrapper : button;
+};
+
+Button.propTypes = {
+    children: _propTypes2.default.object,
+    className: _propTypes2.default.string,
+    has_effect: _propTypes2.default.bool,
+    id: _propTypes2.default.string,
+    is_disabled: _propTypes2.default.bool,
+    onClick: _propTypes2.default.func,
+    text: _propTypes2.default.string,
+    wrapperClassName: _propTypes2.default.string
+};
+
+exports.default = Button;
 
 /***/ }),
 
@@ -7900,7 +8239,8 @@ var ThemeWrapper = function ThemeWrapper(_ref) {
         is_dark_theme = _ref.is_dark_theme;
 
     var theme_wrapper_class = (0, _classnames2.default)('theme-wrapper', {
-        dark: is_dark_theme
+        dark: is_dark_theme,
+        light: !is_dark_theme
     });
     return _react2.default.createElement(
         'div',
@@ -8480,6 +8820,33 @@ exports.default = (0, _connect.connect)(function (_ref) {
 
 /***/ }),
 
+/***/ "./src/javascript/app_2/App/Middlewares/is_client_allowed_to_visit.js":
+/*!****************************************************************************!*\
+  !*** ./src/javascript/app_2/App/Middlewares/is_client_allowed_to_visit.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.isClientAllowedToVisit = undefined;
+
+var _client_base = __webpack_require__(/*! ../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
+
+var _client_base2 = _interopRequireDefault(_client_base);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var isClientAllowedToVisit = exports.isClientAllowedToVisit = function isClientAllowedToVisit() {
+    return !_client_base2.default.isLoggedIn() || _client_base2.default.get('is_virtual') || _client_base2.default.get('landing_company_shortcode') === 'costarica';
+};
+
+/***/ }),
+
 /***/ "./src/javascript/app_2/App/app.js":
 /*!*****************************************!*\
   !*** ./src/javascript/app_2/App/app.js ***!
@@ -8569,6 +8936,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
+var _is_client_allowed_to_visit = __webpack_require__(/*! ./Middlewares/is_client_allowed_to_visit */ "./src/javascript/app_2/App/Middlewares/is_client_allowed_to_visit.js");
+
 var _base_name = __webpack_require__(/*! ../Utils/URL/base_name */ "./src/javascript/app_2/Utils/URL/base_name.js");
 
 var _base_name2 = _interopRequireDefault(_base_name);
@@ -8609,6 +8978,10 @@ var _routes = __webpack_require__(/*! ./Containers/Routes/routes.jsx */ "./src/j
 
 var _routes2 = _interopRequireDefault(_routes);
 
+var _DenialOfServiceModal = __webpack_require__(/*! ./Components/Elements/DenialOfServiceModal */ "./src/javascript/app_2/App/Components/Elements/DenialOfServiceModal/index.js");
+
+var _DenialOfServiceModal2 = _interopRequireDefault(_DenialOfServiceModal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var App = function App(_ref) {
@@ -8636,7 +9009,8 @@ var App = function App(_ref) {
                         _react2.default.createElement(_routes2.default, null),
                         _react2.default.createElement(_PortfolioDrawer2.default, null),
                         _react2.default.createElement(_toast_message2.default, { position: _ToastMessage.POSITIONS.TOP_RIGHT })
-                    )
+                    ),
+                    _react2.default.createElement(_DenialOfServiceModal2.default, { is_visible: !(0, _is_client_allowed_to_visit.isClientAllowedToVisit)() })
                 ),
                 _react2.default.createElement(
                     'footer',
@@ -14261,14 +14635,14 @@ var ContractTypeWidget = function (_React$PureComponent) {
                 'div',
                 {
                     ref: this.setWrapperRef,
-                    className: container_classes.join(' ')
+                    className: container_classes.join(' '),
+                    tabIndex: '0'
                 },
                 _react2.default.createElement(
                     'div',
                     {
                         className: 'contracts-popup-display ' + (this.state.is_dialog_open ? 'clicked' : ''),
-                        onClick: this.handleVisibility,
-                        onBlur: this.handleVisibility
+                        onClick: this.handleVisibility
                     },
                     _react2.default.createElement(_Categories.IconTradeCategory, { category: this.props.value }),
                     _react2.default.createElement(
@@ -15051,9 +15425,9 @@ var _currency_base = __webpack_require__(/*! ../../../../../../_common/base/curr
 
 var _localize = __webpack_require__(/*! ../../../../../../_common/localize */ "./src/javascript/_common/localize.js");
 
-var _dropdown = __webpack_require__(/*! ../../../../../App/Components/Form/dropdown.jsx */ "./src/javascript/app_2/App/Components/Form/dropdown.jsx");
+var _DropDown = __webpack_require__(/*! ../../../../../App/Components/Form/DropDown */ "./src/javascript/app_2/App/Components/Form/DropDown/index.js");
 
-var _dropdown2 = _interopRequireDefault(_dropdown);
+var _DropDown2 = _interopRequireDefault(_DropDown);
 
 var _fieldset = __webpack_require__(/*! ../../../../../App/Components/Form/fieldset.jsx */ "./src/javascript/app_2/App/Components/Form/fieldset.jsx");
 
@@ -15111,14 +15485,14 @@ var Amount = function Amount(_ref) {
         _react2.default.createElement(
             'div',
             { className: amount_container_class },
-            _react2.default.createElement(_dropdown2.default, {
+            _react2.default.createElement(_DropDown2.default, {
                 list: basis_list,
                 value: basis,
                 name: 'basis',
                 onChange: onChange,
                 is_nativepicker: is_nativepicker
             }),
-            !has_currency && _react2.default.createElement(_dropdown2.default, {
+            !has_currency && _react2.default.createElement(_DropDown2.default, {
                 list: currencies_list,
                 value: currency,
                 name: 'currency',
@@ -15307,9 +15681,9 @@ var _DatePicker = __webpack_require__(/*! ../../../../../App/Components/Form/Dat
 
 var _DatePicker2 = _interopRequireDefault(_DatePicker);
 
-var _dropdown = __webpack_require__(/*! ../../../../../App/Components/Form/dropdown.jsx */ "./src/javascript/app_2/App/Components/Form/dropdown.jsx");
+var _DropDown = __webpack_require__(/*! ../../../../../App/Components/Form/DropDown */ "./src/javascript/app_2/App/Components/Form/DropDown/index.js");
 
-var _dropdown2 = _interopRequireDefault(_dropdown);
+var _DropDown2 = _interopRequireDefault(_DropDown);
 
 var _fieldset = __webpack_require__(/*! ../../../../../App/Components/Form/fieldset.jsx */ "./src/javascript/app_2/App/Components/Form/fieldset.jsx");
 
@@ -15430,7 +15804,7 @@ var Duration = function Duration(_ref) {
             header: (0, _localize.localize)('Trade Duration'),
             icon: 'trade-duration'
         },
-        _react2.default.createElement(_dropdown2.default, {
+        _react2.default.createElement(_DropDown2.default, {
             list: expiry_list,
             value: expiry_type,
             name: 'expiry_type',
@@ -15462,7 +15836,7 @@ var Duration = function Duration(_ref) {
                     is_nativepicker: is_nativepicker,
                     error_messages: validation_errors.duration || []
                 }),
-                _react2.default.createElement(_dropdown2.default, {
+                _react2.default.createElement(_DropDown2.default, {
                     list: duration_units_list,
                     value: duration_unit,
                     name: 'duration_unit',
@@ -15554,9 +15928,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _localize = __webpack_require__(/*! ../../../../../../_common/localize */ "./src/javascript/_common/localize.js");
 
-var _dropdown = __webpack_require__(/*! ../../../../../App/Components/Form/dropdown.jsx */ "./src/javascript/app_2/App/Components/Form/dropdown.jsx");
+var _DropDown = __webpack_require__(/*! ../../../../../App/Components/Form/DropDown */ "./src/javascript/app_2/App/Components/Form/DropDown/index.js");
 
-var _dropdown2 = _interopRequireDefault(_dropdown);
+var _DropDown2 = _interopRequireDefault(_DropDown);
 
 var _fieldset = __webpack_require__(/*! ../../../../../App/Components/Form/fieldset.jsx */ "./src/javascript/app_2/App/Components/Form/fieldset.jsx");
 
@@ -15593,7 +15967,7 @@ var LastDigit = function LastDigit(_ref) {
             header: (0, _localize.localize)('Last Digit Prediction'),
             icon: 'digits'
         },
-        _react2.default.createElement(_dropdown2.default, {
+        _react2.default.createElement(_DropDown2.default, {
             list: last_digit_numbers,
             value: +last_digit,
             name: 'last_digit',
@@ -15640,9 +16014,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _localize = __webpack_require__(/*! ../../../../../../_common/localize */ "./src/javascript/_common/localize.js");
 
-var _dropdown = __webpack_require__(/*! ../../../../../App/Components/Form/dropdown.jsx */ "./src/javascript/app_2/App/Components/Form/dropdown.jsx");
+var _DropDown = __webpack_require__(/*! ../../../../../App/Components/Form/DropDown */ "./src/javascript/app_2/App/Components/Form/DropDown/index.js");
 
-var _dropdown2 = _interopRequireDefault(_dropdown);
+var _DropDown2 = _interopRequireDefault(_DropDown);
 
 var _fieldset = __webpack_require__(/*! ../../../../../App/Components/Form/fieldset.jsx */ "./src/javascript/app_2/App/Components/Form/fieldset.jsx");
 
@@ -15689,7 +16063,7 @@ var StartDate = function StartDate(_ref) {
             header: (0, _localize.localize)('Start time'),
             icon: 'start-time'
         },
-        _react2.default.createElement(_dropdown2.default, {
+        _react2.default.createElement(_DropDown2.default, {
             name: 'start_date',
             value: start_date,
             list: start_dates_list,
@@ -16031,6 +16405,8 @@ var _fieldset2 = _interopRequireDefault(_fieldset);
 
 var _connect = __webpack_require__(/*! ../../../Stores/connect */ "./src/javascript/app_2/Stores/connect.js");
 
+var _is_client_allowed_to_visit = __webpack_require__(/*! ../../../App/Middlewares/is_client_allowed_to_visit */ "./src/javascript/app_2/App/Middlewares/is_client_allowed_to_visit.js");
+
 var _contract_info = __webpack_require__(/*! ../Components/Form/Purchase/contract_info.jsx */ "./src/javascript/app_2/Modules/Trading/Components/Form/Purchase/contract_info.jsx");
 
 var _contract_info2 = _interopRequireDefault(_contract_info);
@@ -16061,7 +16437,7 @@ var Purchase = function Purchase(_ref) {
         trade_types = _ref.trade_types;
     return Object.keys(trade_types).map(function (type, idx) {
         var info = proposal_info[type] || {};
-        var is_disabled = !is_purchase_enabled || !is_trade_enabled || !info.id;
+        var is_disabled = !is_purchase_enabled || !is_trade_enabled || !info.id || !(0, _is_client_allowed_to_visit.isClientAllowedToVisit)();
 
         var purchase_button = _react2.default.createElement(_button2.default, {
             is_disabled: is_disabled,
@@ -17615,6 +17991,58 @@ exports.default = data;
 
 /***/ }),
 
+/***/ "./src/javascript/app_2/Services/Helpers/switch_account.js":
+/*!*****************************************************************!*\
+  !*** ./src/javascript/app_2/Services/Helpers/switch_account.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.switchAccount = undefined;
+
+var _gtm = __webpack_require__(/*! ../../../_common/base/gtm */ "./src/javascript/_common/base/gtm.js");
+
+var _gtm2 = _interopRequireDefault(_gtm);
+
+var _socket_cache = __webpack_require__(/*! ../../../_common/base/socket_cache */ "./src/javascript/_common/base/socket_cache.js");
+
+var SocketCache = _interopRequireWildcard(_socket_cache);
+
+var _client_base = __webpack_require__(/*! ../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
+
+var _client_base2 = _interopRequireDefault(_client_base);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Switch to the given loginid account.
+ *
+ * @param loginid
+ */
+var switchAccount = exports.switchAccount = function switchAccount(loginid) {
+    if (!loginid || !_client_base2.default.get('token', loginid)) {
+        return;
+    }
+    sessionStorage.setItem('active_tab', '1');
+    // set local storage
+    _gtm2.default.setLoginFlag();
+    _client_base2.default.set('cashier_confirmed', 0);
+    _client_base2.default.set('accepted_bch', 0);
+    _client_base2.default.set('loginid', loginid);
+    SocketCache.clear();
+    window.location.reload();
+};
+
+/***/ }),
+
 /***/ "./src/javascript/app_2/Services/index.js":
 /*!************************************************!*\
   !*** ./src/javascript/app_2/Services/index.js ***!
@@ -17686,6 +18114,10 @@ var _ws_methods = __webpack_require__(/*! ./ws_methods */ "./src/javascript/app_
 
 var _ws_methods2 = _interopRequireDefault(_ws_methods);
 
+var _gtm = __webpack_require__(/*! ../Utils/gtm */ "./src/javascript/app_2/Utils/gtm.js");
+
+var _gtm2 = _interopRequireDefault(_gtm);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var requestLogout = exports.requestLogout = function requestLogout() {
@@ -17694,6 +18126,7 @@ var requestLogout = exports.requestLogout = function requestLogout() {
 
 var doLogout = function doLogout(response) {
     if (response.logout !== 1) return;
+    _gtm2.default.pushDataLayer({ event: 'log_out' });
     (0, _storage.removeCookies)('affiliate_token', 'affiliate_tracking');
     _client_base2.default.clearAllAccounts();
     _client_base2.default.set('loginid', '');
@@ -18972,6 +19405,9 @@ var ContractStore = (_dec = _mobx.action.bound, _dec2 = _mobx.action.bound, _dec
             this.contract_info = response.proposal_open_contract;
             if ((0, _logic.isEnded)(this.contract_info)) {
                 this.chart_config = (0, _logic.getChartConfig)(this.contract_info);
+            } else {
+                delete this.chart_config.end_epoch;
+                delete this.chart_config.start_epoch;
             }
             (0, _chart_barriers.createChartBarrier)(this.smart_chart, this.contract_info);
             (0, _chart_markers.createChartMarkers)(this.smart_chart, this.contract_info, this);
@@ -24242,7 +24678,7 @@ var _language = __webpack_require__(/*! ../../../_common/language */ "./src/java
 var currentLanguage = exports.currentLanguage = (0, _language.get)();
 
 var getAllowedLanguages = exports.getAllowedLanguages = function getAllowedLanguages() {
-    var exclude_languages = ['JA', 'ACH'];
+    var exclude_languages = ['ACH'];
     var language_list = Object.keys((0, _language.getAll)()).filter(function (key) {
         return !exclude_languages.includes(key);
     }).reduce(function (obj, key) {
@@ -24949,6 +25385,7 @@ var GTM = function () {
     var pushPurchaseData = function pushPurchaseData(contract_data, root_store) {
         var data = {
             event: 'buy_contract',
+            bom_ui: 'new',
             contract: {
                 amount: contract_data.amount,
                 barrier1: contract_data.barrier,
@@ -25042,6 +25479,25 @@ window.addEventListener('pageshow', function (e) {
  * git update-index --assume-unchanged src/javascript/config.js
  *
  */
+var domain_app_ids = { // these domains also being used in '_common/url.js' as supported "production domains"
+    'binary.com': 1,
+    'binary.me': 15284
+};
+
+var getCurrentBinaryDomain = function getCurrentBinaryDomain() {
+    return Object.keys(domain_app_ids).find(function (domain) {
+        return new RegExp('.' + domain + '$', 'i').test(window.location.hostname);
+    });
+};
+
+var isProduction = function isProduction() {
+    var all_domains = Object.keys(domain_app_ids).map(function (domain) {
+        return 'www\\.' + domain.replace('.', '\\.');
+    });
+    return new RegExp('^(' + all_domains.join('|') + ')$', 'i').test(window.location.hostname);
+};
+
+var binary_desktop_app_id = 14473;
 
 var getAppId = function getAppId() {
     var app_id = null;
@@ -25050,6 +25506,10 @@ var getAppId = function getAppId() {
     var is_new_app = /\/app\//.test(window.location.pathname);
     if (config_app_id) {
         app_id = config_app_id;
+    } else if (/desktop-app/i.test(window.location.href) || window.localStorage.getItem('config.is_desktop_app')) {
+        window.localStorage.removeItem('config.default_app_id');
+        window.localStorage.setItem('config.is_desktop_app', 1);
+        app_id = binary_desktop_app_id;
     } else if (/staging\.binary\.com/i.test(window.location.hostname)) {
         window.localStorage.removeItem('config.default_app_id');
         app_id = 1098;
@@ -25063,9 +25523,13 @@ var getAppId = function getAppId() {
         app_id = 15265;
     } else {
         window.localStorage.removeItem('config.default_app_id');
-        app_id = 1;
+        app_id = domain_app_ids[getCurrentBinaryDomain()] || 1;
     }
     return app_id;
+};
+
+var isBinaryApp = function isBinaryApp() {
+    return +getAppId() === binary_desktop_app_id;
 };
 
 var getSocketURL = function getSocketURL() {
@@ -25101,10 +25565,9 @@ var getSocketURL = function getSocketURL() {
 
         // TODO: in order to use connection_setup config, uncomment the above section and remove next lines
 
-        var is_production = /www\.binary\.com/i.test(window.location.hostname);
         var loginid = window.localStorage.getItem('active_loginid');
         var is_real = loginid && !/^VRT/.test(loginid);
-        var server = is_production && is_real ? 'green' : 'blue';
+        var server = isProduction() && is_real ? 'green' : 'blue';
 
         server_url = server + '.binaryws.com';
     }
@@ -25112,7 +25575,10 @@ var getSocketURL = function getSocketURL() {
 };
 
 module.exports = {
+    getCurrentBinaryDomain: getCurrentBinaryDomain,
+    isProduction: isProduction,
     getAppId: getAppId,
+    isBinaryApp: isBinaryApp,
     getSocketURL: getSocketURL
 };
 
